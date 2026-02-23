@@ -15,6 +15,7 @@ router.use(auth);
 /**
  * GET /api/costs/summary
  * Get cost summary across all connected accounts
+ * Uses CUR (FREE) for AWS instead of Cost Explorer API
  */
 router.get('/summary', async (req: AuthRequest, res: Response) => {
   try {
@@ -69,20 +70,16 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
 
         switch (account.provider) {
           case 'aws': {
-            const client = await awsCostExplorer.createCostExplorerClient(
-              account as any
-            );
-            const currentData = await awsCostExplorer.getCostAndUsage(
-              client,
+            // Use CUR (FREE) instead of Cost Explorer API ($0.01/request)
+            const currentData = await curService.getCURCostData(
+              account as any,
               currentMonthStart,
-              currentEnd,
-              'MONTHLY'
+              currentEnd
             );
-            const lastData = await awsCostExplorer.getCostAndUsage(
-              client,
+            const lastData = await curService.getCURCostData(
+              account as any,
               lastMonthStart,
-              lastMonthEnd,
-              'MONTHLY'
+              lastMonthEnd
             );
             currentCost = currentData.reduce((sum, d) => sum + d.cost, 0);
             lastMonthCost = lastData.reduce((sum, d) => sum + d.cost, 0);
@@ -161,6 +158,7 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
 /**
  * GET /api/costs/daily
  * Get daily cost data for the last 30 days
+ * Uses CUR (FREE) for AWS instead of Cost Explorer API
  */
 router.get('/daily', async (req: AuthRequest, res: Response) => {
   try {
@@ -199,16 +197,23 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
 
         switch (account.provider) {
           case 'aws': {
-            const client = await awsCostExplorer.createCostExplorerClient(
-              account as any
-            );
-            const data = await awsCostExplorer.getCostAndUsage(
-              client,
+            // Use CUR (FREE) instead of Cost Explorer API ($0.01/request)
+            const curData = await curService.getCURCostData(
+              account as any,
               startDate,
-              endDate,
-              'DAILY'
+              endDate
             );
-            costs = data.map((d) => ({ date: d.date, cost: d.cost }));
+            
+            // Aggregate CUR data by date
+            const costsByDate: { [date: string]: number } = {};
+            for (const item of curData) {
+              if (!costsByDate[item.date]) {
+                costsByDate[item.date] = 0;
+              }
+              costsByDate[item.date] += item.cost;
+            }
+            
+            costs = Object.entries(costsByDate).map(([date, cost]) => ({ date, cost }));
             break;
           }
           case 'gcp': {
@@ -389,59 +394,108 @@ router.get('/services', async (req: AuthRequest, res: Response) => {
 /**
  * GET /api/costs/forecast
  * Get cost forecast for the next 7 days
+ * Uses simple projection based on CUR data (FREE) instead of Cost Explorer Forecast API
  */
 router.get('/forecast', async (req: AuthRequest, res: Response) => {
   try {
     const accounts = await CloudAccount.find({
       userId: req.userId,
       status: 'connected',
-      provider: 'aws', // Only AWS has native forecast API
     });
 
     if (accounts.length === 0) {
-      res.json({ forecast: [], message: 'No AWS accounts for forecast' });
+      res.json({ forecast: [], message: 'No connected accounts' });
       return;
     }
 
     const today = new Date();
-    const nextWeek = new Date(today);
-    nextWeek.setDate(nextWeek.getDate() + 7);
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const formatDate = (d: Date): string => {
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
-    const startDate = today.toISOString().split('T')[0];
-    const endDate = nextWeek.toISOString().split('T')[0];
+    const startDate = formatDate(thirtyDaysAgo);
+    const endDate = formatDate(today);
 
-    let totalForecast = 0;
-    const forecastByDay: { date: string; cost: number }[] = [];
+    let totalHistoricalCost = 0;
+    let daysWithData = 0;
 
+    // Calculate average daily cost from historical data
     for (const account of accounts) {
       try {
-        const client = await awsCostExplorer.createCostExplorerClient(
-          account as any
-        );
-        const forecast = await awsCostExplorer.getCostForecast(
-          client,
-          startDate,
-          endDate
-        );
-
-        totalForecast += forecast.totalForecast;
-
-        for (const day of forecast.forecastByDay) {
-          const existing = forecastByDay.find((d) => d.date === day.date);
-          if (existing) {
-            existing.cost += day.cost;
-          } else {
-            forecastByDay.push({ ...day });
+        switch (account.provider) {
+          case 'aws': {
+            const curData = await curService.getCURCostData(
+              account as any,
+              startDate,
+              endDate
+            );
+            
+            // Aggregate by date
+            const costsByDate: { [date: string]: number } = {};
+            for (const item of curData) {
+              if (!costsByDate[item.date]) {
+                costsByDate[item.date] = 0;
+              }
+              costsByDate[item.date] += item.cost;
+            }
+            
+            totalHistoricalCost += Object.values(costsByDate).reduce((sum, cost) => sum + cost, 0);
+            daysWithData = Math.max(daysWithData, Object.keys(costsByDate).length);
+            break;
+          }
+          case 'gcp': {
+            const costs = await gcpBigQuery.getDailyCosts(
+              account.encryptedCredentials!,
+              startDate,
+              endDate
+            );
+            totalHistoricalCost += costs.reduce((sum, d) => sum + d.cost, 0);
+            daysWithData = Math.max(daysWithData, costs.length);
+            break;
+          }
+          case 'azure': {
+            const costs = await azureCostManagement.getDailyCosts(
+              account.encryptedCredentials!,
+              startDate,
+              endDate
+            );
+            totalHistoricalCost += costs.reduce((sum, d) => sum + d.cost, 0);
+            daysWithData = Math.max(daysWithData, costs.length);
+            break;
           }
         }
       } catch (error) {
-        console.error(`Error fetching forecast for ${account.name}:`, error);
+        console.error(`Error fetching forecast data for ${account.name}:`, error);
       }
     }
 
+    // Calculate average daily cost
+    const avgDailyCost = daysWithData > 0 ? totalHistoricalCost / daysWithData : 0;
+
+    // Generate 7-day forecast
+    const forecastByDay: { date: string; cost: number }[] = [];
+    for (let i = 1; i <= 7; i++) {
+      const forecastDate = new Date(today);
+      forecastDate.setDate(forecastDate.getDate() + i);
+      forecastByDay.push({
+        date: formatDate(forecastDate),
+        cost: avgDailyCost,
+      });
+    }
+
+    const totalForecast = avgDailyCost * 7;
+
     res.json({
       totalForecast,
-      forecastByDay: forecastByDay.sort((a, b) => a.date.localeCompare(b.date)),
+      forecastByDay,
+      method: 'simple_average',
+      note: 'Forecast based on 30-day average (FREE alternative to Cost Explorer Forecast API)',
     });
   } catch (error) {
     console.error('Forecast error:', error);
