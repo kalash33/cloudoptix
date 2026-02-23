@@ -89,6 +89,14 @@ Scan repositories for cloud optimization opportunities:
 
 ![Codebase Analysis](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/codebase_page_1769860998897.png)
 
+### 8. Service-Level Cost Analytics
+Detailed cost breakdown by service and usage type:
+- Real-time cost tracking per service
+- Month-end projections with confidence scores
+- Cost distribution visualizations
+- Usage type granularity
+- Multi-provider filtering and search
+
 ---
 
 ## 🏗️ Architecture
@@ -185,11 +193,32 @@ NEXT_PUBLIC_API_URL=http://localhost:5001
 cd server
 npm run dev
 
-# Terminal 2: Start frontend
+# Terminal 2: Start frontend (in root directory)
 npm run dev
 ```
 
 Access the application at **http://localhost:3000**
+
+### AWS Cost and Usage Reports (CUR) Setup
+
+For detailed cost data without API charges, deploy the CloudFormation template:
+
+```bash
+# Deploy CUR setup (one-time)
+aws cloudformation create-stack \
+  --stack-name finops-spendy-cur \
+  --template-body file://public/aws-cur-setup.yaml \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --parameters ParameterKey=S3BucketName,ParameterValue=your-unique-bucket-name
+
+# Wait for stack creation
+aws cloudformation wait stack-create-complete --stack-name finops-spendy-cur
+
+# Get outputs (S3 bucket name and credentials)
+aws cloudformation describe-stacks --stack-name finops-spendy-cur --query 'Stacks[0].Outputs'
+```
+
+Note: First CUR data appears within 24 hours of setup.
 
 ### Demo Credentials
 | Field | Value |
@@ -247,6 +276,7 @@ finopsspendy/
 | `/api/accounts` | GET/POST | Manage cloud accounts |
 | `/api/costs/summary` | GET | Cost overview |
 | `/api/costs/daily` | GET | Daily cost trend |
+| `/api/costs/services` | GET | Service-level cost breakdown |
 | `/api/recommendations` | GET | List recommendations |
 | `/api/recommendations/generate` | POST | Generate AI recommendations |
 

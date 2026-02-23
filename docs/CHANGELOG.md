@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### February 23, 2026
+#### Added
+- AWS Cost and Usage Reports (CUR) service integration
+- CloudFormation template (`public/aws-cur-setup.yaml`) for automated CUR setup
+- Service-level cost analytics page (`/services`) with:
+  - Real-time cost tracking per service and usage type
+  - Month-end projections with confidence scoring
+  - Interactive donut charts for cost distribution
+  - Advanced filtering by provider and search
+  - Animated statistics and progress indicators
+- CUR service (`server/src/services/aws/curService.ts`) for S3-based cost data retrieval
+- Support for CUR bucket configuration in CloudAccount model
+- Free alternative to Cost Explorer API (no API charges)
+
+#### Changed
+- Updated CloudAccount model to include `curBucketName` and `curReportPath` metadata fields
+- Enhanced costs API with `/api/costs/services` endpoint for granular service data
+
 ### February 3, 2026
 #### Added
 - Project status documentation in `docs/` folder
