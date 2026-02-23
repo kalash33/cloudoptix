@@ -18,6 +18,8 @@ import {
   Cloud,
   Plus,
   LogOut,
+  CheckCircle,
+  List,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,6 +29,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Recommendations", href: "/recommendations", icon: Lightbulb },
   { name: "Codebase Analysis", href: "/codebase", icon: Code2 },
+  { name: "Services", href: "/services", icon: List },
   { name: "Resources", href: "/resources", icon: Server },
   { name: "Kubernetes", href: "/kubernetes", icon: Cloud },
   { name: "Commitments", href: "/commitments", icon: Wallet },

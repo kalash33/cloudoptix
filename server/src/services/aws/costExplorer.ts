@@ -1,12 +1,15 @@
-import {
-  CostExplorerClient,
-  GetCostAndUsageCommand,
-  GetCostForecastCommand,
-  GetReservationUtilizationCommand,
-  GetSavingsPlansUtilizationCommand,
-  Granularity,
-  Metric,
-} from '@aws-sdk/client-cost-explorer';
+/**
+ * AWS Cost Explorer Service - DISABLED
+ * 
+ * Cost Explorer API has been disabled to prevent charges ($0.01/request).
+ * This file returns stub data. Real cost data will come from CUR (S3).
+ * 
+ * Migration Status: Pending CUR setup
+ */
+
+import { CostExplorerClient, Granularity } from '@aws-sdk/client-cost-explorer';
+import { STSClient, AssumeRoleCommand } from '@aws-sdk/client-sts';
+import { ICloudAccount } from '../../models/CloudAccount';
 import { decryptCredentials } from '../../config/encryption';
 
 interface AWSCredentials {
@@ -27,125 +30,98 @@ interface DailyCost {
   services: CostByService[];
 }
 
-/**
- * Creates an AWS Cost Explorer client with the provided encrypted credentials
- */
-export function createCostExplorerClient(
-  encryptedCredentials: string
-): CostExplorerClient {
-  const credentials = decryptCredentials(encryptedCredentials) as AWSCredentials;
+// Flag to enable/disable Cost Explorer API calls
+// Set to false to prevent charges
+const COST_EXPLORER_ENABLED = false;
 
-  return new CostExplorerClient({
-    region: credentials.region || 'us-east-1',
-    credentials: {
-      accessKeyId: credentials.accessKeyId,
-      secretAccessKey: credentials.secretAccessKey,
-    },
-  });
+/**
+ * Creates an AWS Cost Explorer client.
+ * NOTE: Client creation is free, only API calls cost money.
+ */
+export async function createCostExplorerClient(
+  account: ICloudAccount
+): Promise<CostExplorerClient> {
+  const region = account.metadata?.region || 'us-east-1';
+
+  if (account.authType === 'role' && account.roleArn) {
+    const sts = new STSClient({ region });
+    
+    const command = new AssumeRoleCommand({
+      RoleArn: account.roleArn,
+      RoleSessionName: 'FinOpsSpendySession',
+      ExternalId: account.externalId,
+    });
+
+    const response = await sts.send(command);
+
+    if (!response.Credentials) {
+      throw new Error('Failed to assume role: No credentials returned');
+    }
+
+    return new CostExplorerClient({
+      region,
+      credentials: {
+        accessKeyId: response.Credentials.AccessKeyId!,
+        secretAccessKey: response.Credentials.SecretAccessKey!,
+        sessionToken: response.Credentials.SessionToken,
+      },
+    });
+
+  } else if (account.encryptedCredentials) {
+    const credentials = decryptCredentials(account.encryptedCredentials) as unknown as AWSCredentials;
+    return new CostExplorerClient({
+      region: credentials.region || region,
+      credentials: {
+        accessKeyId: credentials.accessKeyId,
+        secretAccessKey: credentials.secretAccessKey,
+      },
+    });
+  }
+
+  throw new Error('Invalid authentication configuration for AWS account');
 }
 
 /**
- * Get cost and usage data for a date range
+ * Get cost and usage data - DISABLED
+ * Returns empty data to prevent Cost Explorer API charges.
+ * Real data will come from CUR (S3) once configured.
  */
 export async function getCostAndUsage(
   client: CostExplorerClient,
   startDate: string,
   endDate: string,
-  granularity: Granularity = 'DAILY'
+  granularity: Granularity = 'DAILY',
+  groupBy: { Type: 'DIMENSION' | 'TAG'; Key: string }[] = [{ Type: 'DIMENSION', Key: 'SERVICE' }]
 ): Promise<DailyCost[]> {
-  const command = new GetCostAndUsageCommand({
-    TimePeriod: {
-      Start: startDate,
-      End: endDate,
-    },
-    Granularity: granularity,
-    Metrics: ['UnblendedCost', 'UsageQuantity'],
-    GroupBy: [
-      {
-        Type: 'DIMENSION',
-        Key: 'SERVICE',
-      },
-    ],
-  });
-
-  const response = await client.send(command);
-
-  const result: DailyCost[] = [];
-
-  if (response.ResultsByTime) {
-    for (const period of response.ResultsByTime) {
-      const date = period.TimePeriod?.Start || '';
-      const services: CostByService[] = [];
-      let totalCost = 0;
-
-      if (period.Groups) {
-        for (const group of period.Groups) {
-          const service = group.Keys?.[0] || 'Unknown';
-          const cost = parseFloat(group.Metrics?.UnblendedCost?.Amount || '0');
-          const currency = group.Metrics?.UnblendedCost?.Unit || 'USD';
-
-          if (cost > 0) {
-            services.push({ service, cost, currency });
-            totalCost += cost;
-          }
-        }
-      }
-
-      result.push({
-        date,
-        cost: totalCost,
-        services: services.sort((a, b) => b.cost - a.cost),
-      });
-    }
+  
+  if (!COST_EXPLORER_ENABLED) {
+    console.log('[CostExplorer] API disabled - returning empty data. Enable CUR for real data.');
+    return [];
   }
 
-  return result;
+  // Original implementation (disabled)
+  return [];
 }
 
 /**
- * Get cost forecast for upcoming period
+ * Get cost forecast - DISABLED
  */
 export async function getCostForecast(
   client: CostExplorerClient,
   startDate: string,
   endDate: string
 ): Promise<{ totalForecast: number; forecastByDay: { date: string; cost: number }[] }> {
-  const command = new GetCostForecastCommand({
-    TimePeriod: {
-      Start: startDate,
-      End: endDate,
-    },
-    Metric: 'UNBLENDED_COST',
-    Granularity: 'DAILY',
-  });
-
-  try {
-    const response = await client.send(command);
-
-    const forecastByDay: { date: string; cost: number }[] = [];
-
-    if (response.ForecastResultsByTime) {
-      for (const period of response.ForecastResultsByTime) {
-        forecastByDay.push({
-          date: period.TimePeriod?.Start || '',
-          cost: parseFloat(period.MeanValue || '0'),
-        });
-      }
-    }
-
-    return {
-      totalForecast: parseFloat(response.Total?.Amount || '0'),
-      forecastByDay,
-    };
-  } catch (error) {
-    // Forecast may fail if not enough historical data
-    console.error('Cost forecast error:', error);
+  
+  if (!COST_EXPLORER_ENABLED) {
+    console.log('[CostExplorer] Forecast API disabled.');
     return { totalForecast: 0, forecastByDay: [] };
   }
+
+  return { totalForecast: 0, forecastByDay: [] };
 }
 
 /**
- * Get Reserved Instance utilization
+ * Get Reserved Instance utilization - DISABLED
  */
 export async function getReservationUtilization(
   client: CostExplorerClient,
@@ -156,35 +132,16 @@ export async function getReservationUtilization(
   totalAmortizedFee: number;
   unusedCommitment: number;
 }> {
-  const command = new GetReservationUtilizationCommand({
-    TimePeriod: {
-      Start: startDate,
-      End: endDate,
-    },
-  });
-
-  try {
-    const response = await client.send(command);
-
-    return {
-      utilizationPercentage: parseFloat(
-        response.Total?.UtilizationPercentage || '0'
-      ),
-      totalAmortizedFee: parseFloat(
-        response.Total?.TotalAmortizedFee || '0'
-      ),
-      unusedCommitment: parseFloat(
-        response.Total?.UnusedHours || '0'
-      ),
-    };
-  } catch (error) {
-    console.error('Reservation utilization error:', error);
+  
+  if (!COST_EXPLORER_ENABLED) {
     return { utilizationPercentage: 0, totalAmortizedFee: 0, unusedCommitment: 0 };
   }
+
+  return { utilizationPercentage: 0, totalAmortizedFee: 0, unusedCommitment: 0 };
 }
 
 /**
- * Get Savings Plans utilization
+ * Get Savings Plans utilization - DISABLED
  */
 export async function getSavingsPlansUtilization(
   client: CostExplorerClient,
@@ -195,52 +152,35 @@ export async function getSavingsPlansUtilization(
   totalCommitment: number;
   usedCommitment: number;
 }> {
-  const command = new GetSavingsPlansUtilizationCommand({
-    TimePeriod: {
-      Start: startDate,
-      End: endDate,
-    },
-  });
-
-  try {
-    const response = await client.send(command);
-
-    return {
-      utilizationPercentage: parseFloat(
-        response.Total?.Utilization?.UtilizationPercentage || '0'
-      ),
-      totalCommitment: parseFloat(
-        response.Total?.Utilization?.TotalCommitment || '0'
-      ),
-      usedCommitment: parseFloat(
-        response.Total?.Utilization?.UsedCommitment || '0'
-      ),
-    };
-  } catch (error) {
-    console.error('Savings Plans utilization error:', error);
+  
+  if (!COST_EXPLORER_ENABLED) {
     return { utilizationPercentage: 0, totalCommitment: 0, usedCommitment: 0 };
   }
+
+  return { utilizationPercentage: 0, totalCommitment: 0, usedCommitment: 0 };
 }
 
 /**
- * Test AWS credentials by making a simple API call
+ * Test AWS credentials - Uses STS instead of Cost Explorer (FREE)
  */
 export async function testConnection(encryptedCredentials: string): Promise<{
   success: boolean;
   error?: string;
 }> {
   try {
-    const client = createCostExplorerClient(encryptedCredentials);
+    const credentials = decryptCredentials(encryptedCredentials) as unknown as AWSCredentials;
+    
+    // Use STS GetCallerIdentity instead of Cost Explorer (FREE)
+    const sts = new STSClient({
+      region: credentials.region || 'us-east-1',
+      credentials: {
+        accessKeyId: credentials.accessKeyId,
+        secretAccessKey: credentials.secretAccessKey,
+      },
+    });
 
-    // Get yesterday's date for a minimal test query
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const startDate = yesterday.toISOString().split('T')[0];
-    const endDate = today.toISOString().split('T')[0];
-
-    await getCostAndUsage(client, startDate, endDate, 'DAILY');
+    const { GetCallerIdentityCommand } = await import('@aws-sdk/client-sts');
+    await sts.send(new GetCallerIdentityCommand({}));
 
     return { success: true };
   } catch (error: any) {

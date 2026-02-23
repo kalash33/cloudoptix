@@ -3,6 +3,7 @@ import CloudAccount from '../models/CloudAccount';
 import CostData from '../models/CostData';
 import { auth, AuthRequest } from '../middleware/auth';
 import * as awsCostExplorer from '../services/aws/costExplorer';
+import * as curService from '../services/aws/curService';
 import * as gcpBigQuery from '../services/gcp/bigquery';
 import * as azureCostManagement from '../services/azure/costManagement';
 
@@ -32,16 +33,27 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    // Calculate date ranges
+    // Calculate date ranges using UTC to avoid timezone issues
     const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    
+    // Format date as YYYY-MM-DD in UTC
+    const formatDate = (d: Date): string => {
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    // Current month: first day to today
+    const startOfMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+    // Last month: first day to last day
+    const startOfLastMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, 1));
+    const endOfLastMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0));
 
-    const currentMonthStart = startOfMonth.toISOString().split('T')[0];
-    const currentEnd = today.toISOString().split('T')[0];
-    const lastMonthStart = startOfLastMonth.toISOString().split('T')[0];
-    const lastMonthEnd = endOfLastMonth.toISOString().split('T')[0];
+    const currentMonthStart = formatDate(startOfMonth);
+    const currentEnd = formatDate(today);
+    const lastMonthStart = formatDate(startOfLastMonth);
+    const lastMonthEnd = formatDate(endOfLastMonth);
 
     const providerCosts: {
       provider: string;
@@ -57,8 +69,8 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
 
         switch (account.provider) {
           case 'aws': {
-            const client = awsCostExplorer.createCostExplorerClient(
-              account.encryptedCredentials
+            const client = await awsCostExplorer.createCostExplorerClient(
+              account as any
             );
             const currentData = await awsCostExplorer.getCostAndUsage(
               client,
@@ -78,12 +90,12 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
           }
           case 'gcp': {
             const currentData = await gcpBigQuery.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               currentMonthStart,
               currentEnd
             );
             const lastData = await gcpBigQuery.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               lastMonthStart,
               lastMonthEnd
             );
@@ -93,12 +105,12 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
           }
           case 'azure': {
             const currentData = await azureCostManagement.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               currentMonthStart,
               currentEnd
             );
             const lastData = await azureCostManagement.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               lastMonthStart,
               lastMonthEnd
             );
@@ -162,13 +174,19 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    // Last 30 days
+    // Last 30 days - use UTC to avoid timezone issues
     const today = new Date();
-    const thirtyDaysAgo = new Date(today);
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 30));
+    
+    const formatDate = (d: Date): string => {
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
-    const startDate = thirtyDaysAgo.toISOString().split('T')[0];
-    const endDate = today.toISOString().split('T')[0];
+    const startDate = formatDate(thirtyDaysAgo);
+    const endDate = formatDate(today);
 
     // Aggregate data by date and provider
     const dailyData: {
@@ -181,8 +199,8 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
 
         switch (account.provider) {
           case 'aws': {
-            const client = awsCostExplorer.createCostExplorerClient(
-              account.encryptedCredentials
+            const client = await awsCostExplorer.createCostExplorerClient(
+              account as any
             );
             const data = await awsCostExplorer.getCostAndUsage(
               client,
@@ -195,7 +213,7 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
           }
           case 'gcp': {
             costs = await gcpBigQuery.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               startDate,
               endDate
             );
@@ -203,7 +221,7 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
           }
           case 'azure': {
             costs = await azureCostManagement.getDailyCosts(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               startDate,
               endDate
             );
@@ -254,11 +272,19 @@ router.get('/services', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    // Current month
+    // Current month - use UTC to avoid timezone issues
     const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startDate = startOfMonth.toISOString().split('T')[0];
-    const endDate = today.toISOString().split('T')[0];
+    const startOfMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+    
+    const formatDate = (d: Date): string => {
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    const startDate = formatDate(startOfMonth);
+    const endDate = formatDate(today);
 
     const serviceData: {
       service: string;
@@ -270,29 +296,32 @@ router.get('/services', async (req: AuthRequest, res: Response) => {
       try {
         switch (account.provider) {
           case 'aws': {
-            const client = awsCostExplorer.createCostExplorerClient(
-              account.encryptedCredentials
-            );
-            const data = await awsCostExplorer.getCostAndUsage(
-              client,
+            // Try CUR first (FREE), fall back to Cost Explorer (DISABLED)
+            const curData = await curService.getCURCostData(
+              account as any,
               startDate,
-              endDate,
-              'MONTHLY'
+              endDate
             );
-            for (const day of data) {
-              for (const service of day.services) {
+            
+            if (curData.length > 0) {
+              // Use CUR data
+              for (const item of curData) {
                 serviceData.push({
-                  service: service.service,
+                  service: `${item.service} - ${item.usageType}`,
                   provider: 'aws',
-                  cost: service.cost,
+                  cost: item.cost,
                 });
               }
+            } else {
+              // CUR not configured - Cost Explorer is disabled to save money
+              // Return placeholder message
+              console.log('[AWS] CUR not configured. Cost Explorer disabled to save money.');
             }
             break;
           }
           case 'gcp': {
             const data = await gcpBigQuery.getCostData(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               startDate,
               endDate
             );
@@ -307,7 +336,7 @@ router.get('/services', async (req: AuthRequest, res: Response) => {
           }
           case 'azure': {
             const data = await azureCostManagement.getCostData(
-              account.encryptedCredentials,
+              account.encryptedCredentials!,
               startDate,
               endDate
             );
@@ -326,15 +355,25 @@ router.get('/services', async (req: AuthRequest, res: Response) => {
       }
     }
 
-    // Aggregate by service and provider
-    const aggregated: { [key: string]: { service: string; provider: string; cost: number } } = {};
+    // Calculate days elapsed and total days in month for projection
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const daysElapsed = today.getDate();
+    
+    // Helper to calculate projection
+    const calculateProjection = (cost: number) => {
+       if (daysElapsed === 0) return 0;
+       return (cost / daysElapsed) * daysInMonth;
+    };
+
+    const aggregated: { [key: string]: { service: string; provider: string; cost: number; projectedCost: number } } = {};
 
     for (const item of serviceData) {
       const key = `${item.provider}:${item.service}`;
       if (!aggregated[key]) {
-        aggregated[key] = { ...item };
+        aggregated[key] = { ...item, projectedCost: calculateProjection(item.cost) };
       } else {
         aggregated[key].cost += item.cost;
+        aggregated[key].projectedCost = calculateProjection(aggregated[key].cost);
       }
     }
 
@@ -376,8 +415,8 @@ router.get('/forecast', async (req: AuthRequest, res: Response) => {
 
     for (const account of accounts) {
       try {
-        const client = awsCostExplorer.createCostExplorerClient(
-          account.encryptedCredentials
+        const client = await awsCostExplorer.createCostExplorerClient(
+          account as any
         );
         const forecast = await awsCostExplorer.getCostForecast(
           client,
@@ -409,5 +448,7 @@ router.get('/forecast', async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch forecast' });
   }
 });
+
+
 
 export default router;

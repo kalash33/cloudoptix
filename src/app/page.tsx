@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [syncing, setSyncing] = useState(false);
   const [costSummary, setCostSummary] = useState(emptyCostSummary);
   const [providerCosts, setProviderCosts] = useState<Array<{ provider: 'aws' | 'gcp' | 'azure'; service: string; cost: number; previousCost: number; trend: number; instances: number }>>([]);
+  const [topServices, setTopServices] = useState<Array<{ service: string; provider: string; cost: number; percent: number }>>([]);
   const [dailyCostTrend, setDailyCostTrend] = useState(emptyDailyCostTrend);
   const [recommendations, setRecommendations] = useState<Array<any>>([]);
   const [hasAccounts, setHasAccounts] = useState(false);
@@ -79,12 +80,15 @@ export default function Dashboard() {
         const totalCurrent = summaryResult.data.totalMonthly;
         const totalPrevious = summaryResult.data.previousMonthly;
         
+        // Helper to format currency (preserve cents for small amounts)
+        const formatCost = (val: number) => Math.round(val * 100) / 100;
+        
         setCostSummary({
-          totalMonthly: Math.round(totalCurrent),
-          previousMonthly: Math.round(totalPrevious),
-          dailyAverage: Math.round(totalCurrent / 30),
-          projectedMonthly: Math.round(totalCurrent * 0.95), // Optimistic projection
-          totalSavingsIdentified: Math.round(totalCurrent * 0.42), // Default 42% savings potential
+          totalMonthly: formatCost(totalCurrent),
+          previousMonthly: formatCost(totalPrevious),
+          dailyAverage: formatCost(totalCurrent / 30),
+          projectedMonthly: formatCost(totalCurrent * 0.95), // Optimistic projection
+          totalSavingsIdentified: formatCost(totalCurrent * 0.42), // Default 42% savings potential
           savingsPercent: 42,
           resourcesAnalyzed: summaryResult.data.providers.length * 50, // Estimate
           recommendationsCount: 23, // Will be updated by recommendations API
@@ -95,10 +99,10 @@ export default function Dashboard() {
           summaryResult.data.providers.map((p) => ({
             provider: p.provider as 'aws' | 'gcp' | 'azure',
             service: p.name,
-            cost: Math.round(p.currentMonth),
-            previousCost: Math.round(p.lastMonth),
+            cost: formatCost(p.currentMonth),
+            previousCost: formatCost(p.lastMonth),
             trend: p.lastMonth > 0 ? ((p.currentMonth - p.lastMonth) / p.lastMonth) * 100 : 0,
-            instances: Math.round(p.currentMonth / 50), // Estimate instances
+            instances: Math.max(1, Math.round(p.currentMonth / 50)), // Estimate instances (min 1)
           }))
         );
       }
@@ -137,6 +141,21 @@ export default function Dashboard() {
           recommendationsCount: recsResult.data!.summary.totalCount,
           totalSavingsIdentified: Math.round(recsResult.data!.summary.totalSavings),
         }));
+      }
+      // Fetch services for Top Cost Drivers
+      const servicesResult = await costsApi.getServices();
+      if (servicesResult.data?.data) {
+        const services = servicesResult.data.data; // Already sorted by cost
+        const totalCost = services.reduce((sum, s) => sum + s.cost, 0);
+        
+        setTopServices(
+          services.slice(0, 5).map(s => ({
+            service: s.service,
+            provider: s.provider,
+            cost: s.cost,
+            percent: totalCost > 0 ? (s.cost / totalCost) * 100 : 0
+          }))
+        );
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -311,15 +330,12 @@ export default function Dashboard() {
       </div>
 
       {/* Cost Drivers Table */}
-      <TopCostDrivers drivers={providerCosts.length > 0 ? (() => {
-        const totalCost = providerCosts.reduce((sum, p) => sum + p.cost, 0);
-        return providerCosts.map((p) => ({
-          service: p.service,
-          provider: p.provider,
-          cost: p.cost,
-          percent: totalCost > 0 ? (p.cost / totalCost) * 100 : 0,
-        }));
-      })() : []} />
+      <TopCostDrivers drivers={topServices.length > 0 ? topServices.map(s => ({
+          service: s.service,
+          provider: s.provider as 'aws' | 'gcp' | 'azure',
+          cost: s.cost,
+          percent: s.percent
+      })) : []} />
     </div>
   );
 }

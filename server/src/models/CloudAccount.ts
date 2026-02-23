@@ -8,7 +8,10 @@ export interface ICloudAccount extends Document {
   provider: CloudProvider;
   name: string;
   accountId: string; // AWS Account ID, GCP Project ID, or Azure Subscription ID
-  encryptedCredentials: string; // AES-256 encrypted credentials
+  encryptedCredentials?: string; // AES-256 encrypted credentials (required for authType='keys')
+  authType: 'keys' | 'role';
+  roleArn?: string;
+  externalId?: string;
   status: AccountStatus;
   lastSyncAt?: Date;
   lastSyncError?: string;
@@ -16,6 +19,9 @@ export interface ICloudAccount extends Document {
     region?: string;
     bigQueryDataset?: string; // For GCP
     tenantId?: string; // For Azure
+    curBucketName?: string; // S3 bucket for CUR reports (AWS)
+    curReportPath?: string; // Path prefix for CUR reports
+    curRegion?: string; // Region where CUR bucket is located
   };
   createdAt: Date;
   updatedAt: Date;
@@ -45,7 +51,22 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
     },
     encryptedCredentials: {
       type: String,
-      required: true,
+      required: function(this: any) {
+        return this.authType === 'keys';
+      },
+    },
+    authType: {
+      type: String,
+      enum: ['keys', 'role'],
+      default: 'keys',
+    },
+    roleArn: {
+      type: String,
+      trim: true,
+    },
+    externalId: {
+      type: String,
+      trim: true,
     },
     status: {
       type: String,
@@ -62,6 +83,9 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
       region: String,
       bigQueryDataset: String,
       tenantId: String,
+      curBucketName: String,
+      curReportPath: String,
+      curRegion: String,
     },
   },
   {

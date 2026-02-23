@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'FinOpsSpendy - Cost and Usage Reports Setup (FREE alternative to Cost Explorer API)'
+
+Parameters:
+  ReportName:
+    Type: String
+    Default: 'finops-spendy-cur'
+    Description: Name for the Cost and Usage Report
+  
+  S3BucketName:
+    Type: String
+    Default: 'finops-spendy-cur-bucket'
+    Description: S3 bucket name for CUR storage (must be globally unique)
+
+Resources:
+  # S3 Bucket for CUR storage
+  CURBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${S3BucketName}-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldReports
+            Status: Enabled
+            ExpirationInDays: 90  # Keep 90 days of reports
+
+  # Bucket policy to allow AWS Billing to write CUR
+  CURBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CURBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowBillingReportDelivery
+            Effect: Allow
+            Principal:
+              Service: billingreports.amazonaws.com
+            Action:
+              - s3:GetBucketAcl
+              - s3:GetBucketPolicy
+            Resource: !GetAtt CURBucket.Arn
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+                aws:SourceArn: !Sub 'arn:aws:cur:us-east-1:${AWS::AccountId}:definition/*'
+          - Sid: AllowBillingReportWrite
+            Effect: Allow
+            Principal:
+              Service: billingreports.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub '${CURBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+                aws:SourceArn: !Sub 'arn:aws:cur:us-east-1:${AWS::AccountId}:definition/*'
+
+  # Cost and Usage Report Definition
+  CostUsageReport:
+    Type: AWS::CUR::ReportDefinition
+    DependsOn: CURBucketPolicy
+    Properties:
+      ReportName: !Ref ReportName
+      TimeUnit: DAILY
+      Format: Parquet
+      Compression: Parquet
+      S3Bucket: !Ref CURBucket
+      S3Prefix: 'cur-reports/'
+      S3Region: !Ref AWS::Region
+      AdditionalSchemaElements:
+        - RESOURCES
+      RefreshClosedReports: true
+      ReportVersioning: OVERWRITE_REPORT
+
+  # IAM User for FinOpsSpendy to read CUR from S3
+  FinOpsSpendyUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: FinOpsSpendyCURReader
+      Policies:
+        - PolicyName: CURReadAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt CURBucket.Arn
+                  - !Sub '${CURBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - sts:GetCallerIdentity
+                Resource: '*'
+
+  FinOpsSpendyAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref FinOpsSpendyUser
+
+Outputs:
+  S3BucketName:
+    Description: S3 bucket where CUR reports are stored
+    Value: !Ref CURBucket
+    Export:
+      Name: FinOpsSpendy-CURBucket
+  
+  S3BucketArn:
+    Description: S3 bucket ARN
+    Value: !GetAtt CURBucket.Arn
+  
+  ReportName:
+    Description: Name of the Cost and Usage Report
+    Value: !Ref ReportName
+  
+  ReportPath:
+    Description: S3 path to CUR reports
+    Value: !Sub 's3://${CURBucket}/cur-reports/${ReportName}/'
+  
+  AccessKeyId:
+    Description: Access Key ID for FinOpsSpendy
+    Value: !Ref FinOpsSpendyAccessKey
+  
+  SecretAccessKey:
+    Description: Secret Access Key for FinOpsSpendy (DO NOT SHARE)
+    Value: !GetAtt FinOpsSpendyAccessKey.SecretAccessKey
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Report Configuration
+        Parameters:
+          - ReportName
+          - S3BucketName
+    ParameterLabels:
+      ReportName:
+        default: Report Name
+      S3BucketName:
+        default: S3 Bucket Name (must be globally unique)

@@ -181,6 +181,7 @@ export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; error?: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  // const [externalId] = useState<string>(""); // Removed unused externalId state
 
   const instructions =
     selectedProvider === "aws"
@@ -218,7 +219,6 @@ export default function OnboardingPage() {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
       
-      // For demo purposes without auth, we'll test the connection
       const response = await fetch(`${API_URL}/api/accounts`, {
         method: "POST",
         headers: {
@@ -237,7 +237,14 @@ export default function OnboardingPage() {
       if (data.connectionTest) {
         setTestResult(data.connectionTest);
       } else if (data.error) {
-        setTestResult({ success: false, error: data.error });
+        if (data.error.includes("not authorized") || data.error.includes("AccessDenied")) {
+           setTestResult({ 
+             success: false, 
+             error: "Connection successful, but AWS Billing Access is disabled. Please enable 'IAM Access' in your AWS Billing Console." 
+           });
+        } else {
+           setTestResult({ success: false, error: data.error });
+        }
       } else {
         setTestResult({ success: true });
       }
@@ -257,43 +264,42 @@ export default function OnboardingPage() {
       case "aws":
         return (
           <>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Access Key ID</label>
-              <input
-                type="text"
-                value={credentials.accessKeyId || ""}
-                onChange={(e) =>
-                  setCredentials({ ...credentials, accessKeyId: e.target.value })
-                }
-                placeholder="AKIAIOSFODNN7EXAMPLE"
-                className="w-full bg-[var(--background-secondary)] border border-[var(--glass-border)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--accent)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Secret Access Key</label>
-              <div className="relative">
+            <div className="space-y-4">
+               <div className="space-y-2">
+                <label className="text-sm font-medium">Access Key ID</label>
                 <input
-                  type={showSecrets.secretAccessKey ? "text" : "password"}
-                  value={credentials.secretAccessKey || ""}
+                  type="text"
+                  value={credentials.accessKeyId || ""}
                   onChange={(e) =>
-                    setCredentials({ ...credentials, secretAccessKey: e.target.value })
+                    setCredentials({ ...credentials, authType: 'keys', accessKeyId: e.target.value })
                   }
-                  placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-                  className="w-full bg-[var(--background-secondary)] border border-[var(--glass-border)] rounded-lg px-4 py-3 pr-12 focus:outline-none focus:border-[var(--accent)]"
+                  placeholder="AKIAIOSFODNN7EXAMPLE"
+                  className="w-full bg-[var(--background-secondary)] border border-[var(--glass-border)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--accent)]"
                 />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowSecrets({ ...showSecrets, secretAccessKey: !showSecrets.secretAccessKey })
-                  }
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
-                >
-                  {showSecrets.secretAccessKey ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-            <div className="p-3 rounded-lg bg-[var(--success)]/10 border border-[var(--success)]/20 text-sm text-[var(--foreground-muted)]">
-              ✓ CloudOptix will automatically scan all AWS regions to discover your resources and costs.
+               </div>
+               <div className="space-y-2">
+                <label className="text-sm font-medium">Secret Access Key</label>
+                <div className="relative">
+                  <input
+                    type={showSecrets.secretAccessKey ? "text" : "password"}
+                    value={credentials.secretAccessKey || ""}
+                    onChange={(e) =>
+                      setCredentials({ ...credentials, authType: 'keys', secretAccessKey: e.target.value })
+                    }
+                    placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+                    className="w-full bg-[var(--background-secondary)] border border-[var(--glass-border)] rounded-lg px-4 py-3 pr-12 focus:outline-none focus:border-[var(--accent)]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowSecrets({ ...showSecrets, secretAccessKey: !showSecrets.secretAccessKey })
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
+                  >
+                    {showSecrets.secretAccessKey ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+               </div>
             </div>
           </>
         );
@@ -534,13 +540,14 @@ export default function OnboardingPage() {
                 </a>
               )}
 
-              {instructions[currentInstruction].code && (
+              {/* TypeScript safe check for code property */}
+              {'code' in instructions[currentInstruction] && (
                 <div className="relative">
                   <pre className="p-4 rounded-lg bg-[var(--background)] border border-[var(--glass-border)] text-sm overflow-x-auto font-mono">
-                    {instructions[currentInstruction].code}
+                    {(instructions[currentInstruction] as any).code}
                   </pre>
                   <button
-                    onClick={() => handleCopy(instructions[currentInstruction].code || "")}
+                    onClick={() => handleCopy((instructions[currentInstruction] as any).code || "")}
                     className="absolute top-2 right-2 p-2 rounded bg-[var(--background-secondary)] hover:bg-[var(--glass-border)] transition-colors"
                   >
                     {copied ? <Check size={14} className="text-[var(--success)]" /> : <Copy size={14} />}
@@ -651,9 +658,19 @@ export default function OnboardingPage() {
                 <h2 className="text-2xl font-bold text-[var(--danger)]">
                   Connection Failed
                 </h2>
-                <p className="text-[var(--foreground-muted)]">
+                <p className="text-[var(--foreground-muted)] mb-4">
                   {testResult?.error || "Unable to connect to your cloud account."}
                 </p>
+                {testResult?.error?.includes("IAM Access") && (
+                   <a 
+                     href="https://console.aws.amazon.com/billing/home#/account" 
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="block mb-6 text-[var(--accent)] hover:underline font-medium"
+                   >
+                     Click here to enable 'IAM Access' in AWS Console →
+                   </a>
+                )}
                 <div className="flex gap-4 justify-center">
                   <button
                     onClick={() => setStep("credentials")}
