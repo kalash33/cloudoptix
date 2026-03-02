@@ -1,134 +1,166 @@
 # CloudOptix
 
-### AI-Powered Cloud Cost Optimization Platform
+### The Unbiased AI Auditor for Multi-Cloud Spend
 
-**Stop overpaying for cloud. Start optimizing with AI.**
+**Your cloud providers want you to spend more. We don't.**
 
 ---
 
 ## The Problem
 
-Cloud costs are out of control:
+Cloud costs spiral silently — and the people most accountable are the least equipped to act:
 
-- **32%** of cloud spend is wasted on average
-- **73%** of organizations struggle with multi-cloud cost visibility
-- **$100B+** wasted annually on unused cloud resources
+- **Finance managers** receive a monthly bill with no breakdown, no team attribution, no way to trace what caused a spike
+- **Budget owners** discover overruns weeks after the billing cycle closes — long after the damage is done
+- **Project managers** are pulled into cost conversations but locked out of tools built only for engineers
+- **32%** of cloud spend is wasted on average — most of it invisible until month-end
+- **$100B+** wasted annually on idle, over-provisioned, or forgotten resources
 
-Teams spend countless hours manually analyzing bills, identifying waste, and tracking down optimization opportunities across AWS, GCP, and Azure.
+The tools that exist today are built for engineers. Everyone else is left out.
 
 ---
 
 ## The Solution
 
-CloudOptix is your intelligent co-pilot for cloud cost management.
+CloudOptix is an unbiased AI auditor that sits above all cloud providers — no incentive to upsell, no vendor lock-in.
 
-One dashboard. All clouds. AI-powered insights.
+It gives **every team** — finance, ops, engineering, leadership — instant visibility into what's being spent, what's being wasted, and exactly what to do about it. No engineering background required.
 
-![CloudOptix Dashboard](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/dashboard_overview_1769860401610.png)
+> *"A finance manager receives an unexpected cloud bill with no breakdown — unable to trace the cause, explain it to leadership, or prevent it from recurring. CloudOptix changes that."*
+
+---
+
+## Trust First
+
+Before features, a promise:
+
+- ✅ **Read-only access** — we never touch your infrastructure, ever
+- ✅ **Encrypted credentials** — AES-256 encryption at rest
+- ✅ **No vendor conflict** — we profit when you spend less, not more
+- ✅ **No data storage** — cost data is processed, not retained
+- ✅ **SOC 2 compliant** — enterprise-grade security standard
 
 ---
 
 ## Key Benefits
 
-### 💰 Reduce Cloud Spend by 30-50%
-AI identifies optimization opportunities you'd never find manually - from underutilized instances to forgotten resources.
+### � Instant Budget Alerts — for Everyone
+The moment spend crosses a threshold or an anomaly is detected, the right people are notified in plain language — CFO, finance manager, project lead, or engineer. No technical knowledge needed to understand it.
 
-### ⏱️ Save 20+ Hours Per Week
-Automate the tedious work of cost analysis. Get instant insights instead of spreadsheet nightmares.
+### 👁️ Two Views, One Platform
+**Finance View** — total spend, budget status, plain-language summaries, team attribution. Zero technical jargon.
+**Engineer View** — resource-level breakdown, rightsizing recommendations, Kubernetes costs, utilization metrics.
+Same data. Right lens for each audience.
 
-### 🔍 Complete Visibility
-One unified view of AWS, GCP, and Azure spend. No more switching between consoles.
+### 🔍 Complete Multi-Cloud Visibility
+One unified view of all cloud providers. No more switching between consoles, no more Excel reconciliation, no more chasing engineers for answers.
 
-### 🤖 AI-Powered Intelligence
-GPT-powered recommendations explain not just *what* to optimize, but *why* and *how*.
+### 🤖 AI That Advocates for You — Not Your Cloud Provider
+Native cloud cost tools are built by the vendors selling you compute. CloudOptix is independent — our AI recommendations are conflict-free, designed to reduce your bill, not justify it.
+
+### 💰 Reduce Cloud Spend by 30–50%
+AI identifies optimization opportunities no one would find manually — from underutilised instances to forgotten resources running unchecked for months.
+
+### 🧠 Catch Waste Before It's Deployed
+The only platform with codebase-level analysis — identifying cost problems at the source code layer, before a single resource is provisioned.
 
 ---
 
 ## Features
 
-### Unified Cost Dashboard
+### 1. Budget Alerts & Anomaly Detection
+Stay ahead of overruns — not behind them:
+- Real-time alerts the moment budgets are breached
+- AI-powered anomaly detection flags unusual spikes within hours, not weeks
+- Plain-language notifications via dashboard, email, and Slack — readable by anyone
+- Forecast future spend before it becomes a problem
+
+### 2. Finance View & Engineer View
+One platform, two lenses — no one gets locked out:
+
+**Finance View**
+- Total spend by team, product, or project in plain language
+- Budget status and variance at a glance
+- Plain-language summaries: "Compute costs rose 34% this month — driven by the data pipeline team"
+- Export-ready reports for leadership and board reviews
+
+**Engineer View**
+- Resource-level breakdown across all providers
+- Utilization metrics (CPU, memory, storage)
+- Rightsizing recommendations with projected savings
+- Kubernetes cluster, namespace, and pod cost attribution
+
+### 3. AI Recommendations
+Conflict-free suggestions built to reduce your bill:
+
+| Recommendation | Potential Savings |
+|----------------|-------------------|
+| Rightsizing underutilised instances | Up to 75% |
+| Switching to spot / preemptible instances | Up to 90% |
+| Deleting unused resources | 100% recovery |
+| Reserved instance & savings plan optimisation | 30–40% |
+
+Each recommendation explains *what* to fix, *why* it matters, and *how* to action it — with one-click export to your ticketing system.
+
+### 4. Unified Cost Dashboard
 See your entire cloud footprint at a glance:
 - Real-time spending across all providers
 - Trend analysis with forecasting
 - Cost allocation by team, project, or service
+- Stale data alerts — if a provider API is unavailable, you're notified immediately in plain language
 
-### AI Recommendations
-Smart suggestions tailored to your infrastructure:
+### 5. Commitment Optimisation
+Maximise reserved instance and savings plan ROI:
+- Track utilisation efficiency across all commitments
+- Identify coverage gaps before renewal windows close
+- AI-powered renewal recommendations
 
-| Recommendation | Potential Savings |
-|----------------|-------------------|
-| Rightsizing underutilized instances | Up to 75% |
-| Switching to Spot/Preemptible | Up to 90% |
-| Deleting unused resources | 100% recovery |
-| Reserved Instance optimization | 30-40% |
-
-![AI Recommendations](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/recommendations_page_1769860425267.png)
-
-### Resource Intelligence
-Know exactly what you're running and what it costs:
-- Full inventory across all clouds
-- Utilization metrics (CPU, memory)
-- Waste identification
-
-![Resource Inventory](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/resources_page_1769860451274.png)
-
-### Kubernetes Cost Tracking
+### 6. Kubernetes Cost Tracking
 Finally understand container costs:
 - Cluster and namespace-level attribution
 - Pod cost allocation
 - Multi-cluster aggregation
 
-![Kubernetes Costs](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/kubernetes_page_1769860489624.png)
+### 7. Codebase Analysis — Catch Waste Before It's Deployed
+**The feature no competitor offers.**
 
-### Budget Management
-Stay in control with proactive alerts:
-- Set spending limits by account or service
-- Get notified before budgets are exceeded
-- Forecast future spend
+Most platforms show you what you're spending. CloudOptix shows you *why you'll spend it* — before the code ships:
+- Identify serverless candidates in existing code
+- Detect cloud provider lock-in patterns
+- Score cloud-agnostic architecture quality
+- Flag infrastructure decisions likely to cause cost spikes at scale
 
-![Budgets & Alerts](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/budgets_page_1769860950214.png)
-
-### Commitment Optimization
-Maximize your Reserved Instance and Savings Plan ROI:
-- Track utilization efficiency
-- Identify coverage gaps
-- Renewal recommendations
-
-![Commitment Management](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/commitments_page_1769860907753.png)
-
-### Codebase Analysis
-Optimize at the source code level:
-- Identify serverless candidates
-- Detect provider lock-in
-- Cloud-agnostic pattern scoring
-
-![Codebase Analysis](file:///Users/kalashpoddar/.gemini/antigravity/brain/ea7f32ee-356c-4eca-94ba-07268f02eb08/codebase_page_1769860998897.png)
+This is the moat: preventing waste at the source, not just reporting it after the fact.
 
 ---
 
 ## How It Works
 
 ```
-1. Connect     →     2. Analyze     →     3. Optimize
-   Your Clouds          With AI             Save Money
+1. Connect     →     2. Normalize     →     3. Alert     →     4. Optimise
+   Your Clouds          All billing           Instantly          Save Money
+                        into one schema       in plain language
 ```
 
-**Step 1:** Securely connect your AWS, GCP, and Azure accounts with read-only access.
+**Step 1 — Connect:** Securely link your cloud accounts via read-only API access. No infrastructure changes, no risk.
 
-**Step 2:** CloudOptix analyzes your usage patterns using AI to identify waste and opportunities.
+**Step 2 — Normalize:** CloudOptix ingests billing data through each provider's official API and maps it into a single unified schema — cross-cloud comparison that's always accurate.
 
-**Step 3:** Implement recommendations with one click or export to your ticketing system.
+**Step 3 — Alert:** The moment a budget is breached, a spike is detected, or waste is identified, the right people are notified in plain language — no engineering knowledge required.
+
+**Step 4 — Optimise:** Implement AI recommendations with one click, or export to your ticketing system. Track savings over time and prove ROI to leadership.
 
 ---
 
-## Security First
+## Pricing
 
-Your cloud security is our priority:
+| Plan | Price | Best for |
+|------|-------|----------|
+| **Starter** | Free forever | Normalization layer + budget alerts for any team |
+| **Pro** | $299/mo | AI recommendations, Finance + Engineer views, attribution |
+| **Enterprise** | Custom | Unlimited + dedicated support + codebase analysis |
 
-- ✅ **Read-only access** - We never modify your infrastructure
-- ✅ **Encrypted credentials** - AES-256 encryption at rest
-- ✅ **SOC 2 compliant** - Enterprise-grade security
-- ✅ **No data storage** - Cost data processed, not stored
+> The free tier delivers immediate value — trust is earned before payment is asked.
 
 ---
 
@@ -140,28 +172,19 @@ Your cloud security is our priority:
 | **GCP** | Compute Engine, GKE, BigQuery, Cloud Storage |
 | **Azure** | Virtual Machines, AKS, Blob Storage, Functions |
 
----
-
-## Pricing
-
-| Plan | Price | Features |
-|------|-------|----------|
-| **Starter** | Free | Up to $10K monthly cloud spend |
-| **Pro** | $299/mo | Up to $100K monthly cloud spend |
-| **Enterprise** | Custom | Unlimited + dedicated support |
+New providers added via a single API connector — slotting into the same unified schema with no disruption.
 
 ---
 
-## Get Started Today
+## Get Started
 
-Stop wasting money on cloud. Start optimizing with CloudOptix.
+Your cloud providers have no incentive to reduce your bill. We do.
 
-**[Start Free Trial →](#)**
+**[Start Free — No Credit Card Required →](#)**
 
 ---
 
-*"CloudOptix identified $47,000 in monthly savings we would have never found on our own."*
-— Engineering Lead, Series B Startup
+*"A finance manager shouldn't need an engineering degree to understand why their cloud bill doubled. CloudOptix is the first tool that gives them that answer in plain English — instantly."*
 
 ---
 
