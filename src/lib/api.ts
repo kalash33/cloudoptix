@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+// API Client v2 - updated 2026-02-28
+const API_URL = "http://localhost:5001";
 
 interface ApiResponse<T> {
   data?: T;
@@ -10,7 +11,6 @@ function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
 }
-
 // Generic fetch wrapper
 async function apiFetch<T>(
   endpoint: string,
@@ -24,6 +24,7 @@ async function apiFetch<T>(
       ...options.headers,
     };
 
+    console.log(`[apiFetch] Executing fetch against: ${API_URL}${endpoint}`);
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       headers,
@@ -132,8 +133,13 @@ export const accountsApi = {
 
 // Costs API
 export const costsApi = {
-  getSummary: () =>
-    apiFetch<{
+  getSummary: (startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    return apiFetch<{
       totalMonthly: number;
       previousMonthly: number;
       trend: number;
@@ -143,10 +149,19 @@ export const costsApi = {
         currentMonth: number;
         lastMonth: number;
       }>;
-    }>("/api/costs/summary"),
+    }>(`/api/costs/summary${queryString}`);
+  },
 
-  getDaily: () =>
-    apiFetch<{
+  getDaily: (startDate?: string, endDate?: string) => {
+    console.log('[API getDaily] Receiving arguments:', { startDate, endDate });
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    console.log('[API getDaily] Built URL:', `/api/costs/daily${queryString}`);
+
+    return apiFetch<{
       data: Array<{
         date: string;
         aws: number;
@@ -154,7 +169,8 @@ export const costsApi = {
         azure: number;
         total: number;
       }>;
-    }>("/api/costs/daily"),
+    }>(`/api/costs/daily${queryString}`);
+  },
 
   getServices: () =>
     apiFetch<{
@@ -170,6 +186,43 @@ export const costsApi = {
       totalForecast: number;
       forecastByDay: Array<{ date: string; cost: number }>;
     }>("/api/costs/forecast"),
+
+  getServiceDaily: (serviceName: string, startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    return apiFetch<{
+      data: Array<{ date: string; cost: number }>;
+    }>(`/api/costs/services/${encodeURIComponent(serviceName)}/daily${queryString}`);
+  },
+
+  getServiceUtilization: (serviceName: string, startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+
+    return apiFetch<{
+      serviceName: string;
+      metrics: {
+        cpu: { avg: number; peak: number; unit: string };
+        memory: { avg: number; peak: number; unit: string };
+        networkIn: { value: number; unit: string };
+        networkOut: { value: number; unit: string };
+        diskReadIOPS: { value: number; unit: string };
+        diskWriteIOPS: { value: number; unit: string };
+      };
+      dailyTrend: Array<{
+        date: string;
+        cpu: number;
+        memory: number;
+        network: number;
+        diskIO: number;
+      }>;
+    }>(`/api/costs/services/${encodeURIComponent(serviceName)}/utilization${queryString}`);
+  },
 };
 
 // Recommendations API
@@ -200,8 +253,17 @@ export const recommendationsApi = {
         totalCount: number;
         totalSavings: number;
         byType: Record<string, number>;
+        currentSpend?: number;
       };
     }>(`/api/recommendations${query ? `?${query}` : ""}`);
+  },
+
+  getAnomalies: () => {
+    return apiFetch<{ anomalies: any[] }>('/api/recommendations/anomalies');
+  },
+
+  getResources: () => {
+    return apiFetch<{ resources: any[] }>('/api/recommendations/resources');
   },
 
   generate: () =>
@@ -215,6 +277,29 @@ export const recommendationsApi = {
       method: "PATCH",
       body: JSON.stringify({ status }),
     }),
+};
+
+// Chat API
+export const chatApi = {
+  sendMessage: (message: string, conversationHistory: Array<{ role: string; content: string }> = []) =>
+    apiFetch<{ reply: string; model: string; usage: any }>('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, conversationHistory }),
+    }),
+
+  analyze: () =>
+    apiFetch<{
+      summary: string;
+      insights: Array<{
+        title: string;
+        description: string;
+        category: string;
+        impact: string;
+        estimatedSavings: string;
+        action: string;
+      }>;
+      overallScore: number;
+    }>('/api/chat/analyze', { method: 'POST' }),
 };
 
 // Helper to set token after login

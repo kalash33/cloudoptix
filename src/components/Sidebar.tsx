@@ -23,7 +23,8 @@ import {
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useAuth } from "@/contexts/AuthContext";
-import { accountsApi, costsApi } from "@/lib/api";
+import { accountsApi, costsApi, recommendationsApi } from "@/lib/api";
+import { Loader2 } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -50,6 +51,8 @@ export function Sidebar() {
   const [hasAccounts, setHasAccounts] = useState(false);
   const [potentialSavings, setPotentialSavings] = useState(0);
   const [savingsPercent, setSavingsPercent] = useState(0);
+  const [isMockLoading, setIsMockLoading] = useState(false);
+  const [mockProvider, setMockProvider] = useState('aws');
 
   useEffect(() => {
     // Check if user has connected accounts
@@ -58,22 +61,35 @@ export function Sidebar() {
         const result = await accountsApi.getAll();
         const accountsExist = !!(result.data?.accounts && result.data.accounts.length > 0);
         setHasAccounts(accountsExist);
-        
+
         if (accountsExist) {
-          // Fetch cost summary to get real savings
-          const costResult = await costsApi.getSummary();
+          // Fetch cost summary to get real spend and recommendations to get real savings
+          const [costResult, recResult] = await Promise.all([
+            costsApi.getSummary(),
+            recommendationsApi.getAll()
+          ]);
+
           if (costResult.data) {
             const monthlySpend = costResult.data.totalMonthly;
-            const savings = Math.round(monthlySpend * 0.42); // Default 42% potential savings
-            setPotentialSavings(savings);
-            setSavingsPercent(42);
+            let realSavings = 0;
+
+            if (recResult.data?.recommendations) {
+              realSavings = Math.round(recResult.data.recommendations.reduce((sum: number, r: any) => sum + (r.savings || 0), 0));
+            }
+
+            setPotentialSavings(realSavings);
+            if (monthlySpend > 0) {
+              setSavingsPercent(Math.round((realSavings / monthlySpend) * 100));
+            } else {
+              setSavingsPercent(0);
+            }
           }
         }
       } catch (error) {
         console.error("Error checking accounts:", error);
       }
     };
-    
+
     if (user) {
       checkAccounts();
     }
@@ -92,6 +108,33 @@ export function Sidebar() {
   const handleLogout = () => {
     logout();
     router.push("/login");
+  };
+
+  const handleConnectMockAccount = async () => {
+    setIsMockLoading(true);
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/api/accounts/mock`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || "demo"}`,
+        },
+        body: JSON.stringify({ provider: mockProvider }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to connect mock account");
+      }
+
+      // Refresh to see the new account data
+      window.location.reload();
+    } catch (error: any) {
+      console.error("Error creating mock account:", error);
+      alert(error.message || "Failed to connect mock account. Please try again.");
+    } finally {
+      setIsMockLoading(false);
+    }
   };
 
   const userName = user?.name || "User";
@@ -174,6 +217,33 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        {/* MOCK ACCOUNT BUTTON - GLOBAL */}
+        {!collapsed && (
+          <div className="px-4 mt-4 mb-2 space-y-2">
+            <select
+              className="w-full bg-[var(--surface)] border border-[var(--glass-border)] rounded px-2 py-1 text-sm text-[var(--foreground)]"
+              value={mockProvider}
+              onChange={(e) => setMockProvider(e.target.value)}
+            >
+              <option value="aws">Mock AWS</option>
+              <option value="gcp">Mock GCP</option>
+              <option value="azure">Mock Azure</option>
+            </select>
+            <button
+              onClick={handleConnectMockAccount}
+              disabled={isMockLoading}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border border-dashed border-[var(--foreground-muted)] text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] transition-colors"
+            >
+              {isMockLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin text-[var(--primary)]" />
+              ) : (
+                <Cloud className="w-4 h-4" />
+              )}
+              <span>Add Mock Data</span>
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* Collapse Toggle */}

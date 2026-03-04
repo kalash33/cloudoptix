@@ -181,14 +181,14 @@ export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; error?: string } | null>(null);
   const [copied, setCopied] = useState(false);
-  // const [externalId] = useState<string>(""); // Removed unused externalId state
+  const [isMockModalOpen, setIsMockModalOpen] = useState(false);
 
   const instructions =
     selectedProvider === "aws"
       ? awsInstructions
       : selectedProvider === "gcp"
-      ? gcpInstructions
-      : azureInstructions;
+        ? gcpInstructions
+        : azureInstructions;
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -218,7 +218,7 @@ export default function OnboardingPage() {
 
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-      
+
       const response = await fetch(`${API_URL}/api/accounts`, {
         method: "POST",
         headers: {
@@ -238,12 +238,12 @@ export default function OnboardingPage() {
         setTestResult(data.connectionTest);
       } else if (data.error) {
         if (data.error.includes("not authorized") || data.error.includes("AccessDenied")) {
-           setTestResult({ 
-             success: false, 
-             error: "Connection successful, but AWS Billing Access is disabled. Please enable 'IAM Access' in your AWS Billing Console." 
-           });
+          setTestResult({
+            success: false,
+            error: "Connection successful, but AWS Billing Access is disabled. Please enable 'IAM Access' in your AWS Billing Console."
+          });
         } else {
-           setTestResult({ success: false, error: data.error });
+          setTestResult({ success: false, error: data.error });
         }
       } else {
         setTestResult({ success: true });
@@ -259,13 +259,83 @@ export default function OnboardingPage() {
     }
   };
 
+  const handleCreateMock = async (provider: Provider) => {
+    setIsLoading(true);
+    setSelectedProvider(provider);
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/api/accounts/mock`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || "demo"}`,
+        },
+        body: JSON.stringify({ provider }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to connect mock account");
+      }
+
+      setTestResult({ success: true });
+      setIsMockModalOpen(false);
+      setStep("test");
+    } catch (error: any) {
+      console.error("Error creating mock account:", error);
+      setTestResult({
+        success: false,
+        error: error.message || "Failed to create mock account",
+      });
+      setIsMockModalOpen(false);
+      setStep("test");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleConnectMockAccount = async () => {
+    if (!selectedProvider) return;
+    setIsLoading(true);
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/api/accounts/mock`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || "demo"}`,
+        },
+        body: JSON.stringify({ provider: selectedProvider }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to connect mock account");
+      }
+
+      setTestResult({ success: true });
+      setStep("test");
+    } catch (error: any) {
+      console.error("Error creating mock account:", error);
+      setTestResult({
+        success: false,
+        error: error.message || "Failed to create mock account",
+      });
+      setStep("test");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const renderCredentialFields = () => {
     switch (selectedProvider) {
       case "aws":
         return (
           <>
             <div className="space-y-4">
-               <div className="space-y-2">
+              <div className="space-y-2">
                 <label className="text-sm font-medium">Access Key ID</label>
                 <input
                   type="text"
@@ -276,8 +346,8 @@ export default function OnboardingPage() {
                   placeholder="AKIAIOSFODNN7EXAMPLE"
                   className="w-full bg-[var(--background-secondary)] border border-[var(--glass-border)] rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--accent)]"
                 />
-               </div>
-               <div className="space-y-2">
+              </div>
+              <div className="space-y-2">
                 <label className="text-sm font-medium">Secret Access Key</label>
                 <div className="relative">
                   <input
@@ -299,7 +369,7 @@ export default function OnboardingPage() {
                     {showSecrets.secretAccessKey ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
-               </div>
+              </div>
             </div>
           </>
         );
@@ -497,6 +567,20 @@ export default function OnboardingPage() {
                 </button>
               ))}
             </div>
+
+            <div className="mt-12 p-6 rounded-xl border border-[var(--glass-border)] bg-[var(--background-secondary)] text-center">
+              <h3 className="text-lg font-semibold mb-2">Want to test things out first?</h3>
+              <p className="text-[var(--foreground-muted)] mb-6 max-w-lg mx-auto">
+                Connect a mock account with sample billing data to explore the dashboard without real credentials.
+              </p>
+              <button
+                onClick={() => setIsMockModalOpen(true)}
+                className="px-6 py-3 rounded-lg bg-[var(--surface)] border border-[var(--glass-border)] hover:border-[var(--accent)] transition-colors inline-flex items-center justify-center gap-2 font-medium"
+              >
+                <Cloud size={18} />
+                Connect Mock Account
+              </button>
+            </div>
           </div>
         )}
 
@@ -598,33 +682,47 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <button
                 onClick={() => {
                   setStep("instructions");
                   setCurrentInstruction(instructions.length - 1);
                 }}
                 className="px-6 py-3 rounded-lg border border-[var(--glass-border)] hover:bg-[var(--background-secondary)] transition-colors"
+                disabled={isLoading}
               >
                 Back
               </button>
-              <button
-                onClick={handleTestConnection}
-                disabled={isLoading}
-                className="px-6 py-3 rounded-lg bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-colors inline-flex items-center gap-2 disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    Testing...
-                  </>
-                ) : (
-                  <>
-                    <Cloud size={16} />
-                    Test Connection
-                  </>
-                )}
-              </button>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleConnectMockAccount}
+                  disabled={isLoading}
+                  className="px-6 py-3 rounded-lg border border-[var(--glass-border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors inline-flex items-center gap-2"
+                  title={`Test with mock ${selectedProvider?.toUpperCase()} data instead of real credentials`}
+                >
+                  <Cloud size={16} />
+                  Use Demo Data
+                </button>
+
+                <button
+                  onClick={handleTestConnection}
+                  disabled={isLoading}
+                  className="px-6 py-3 rounded-lg bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-colors inline-flex items-center gap-2 disabled:opacity-50"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Testing...
+                    </>
+                  ) : (
+                    <>
+                      <Check size={16} />
+                      Test Connection
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -662,14 +760,14 @@ export default function OnboardingPage() {
                   {testResult?.error || "Unable to connect to your cloud account."}
                 </p>
                 {testResult?.error?.includes("IAM Access") && (
-                   <a 
-                     href="https://console.aws.amazon.com/billing/home#/account" 
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="block mb-6 text-[var(--accent)] hover:underline font-medium"
-                   >
-                     Click here to enable 'IAM Access' in AWS Console →
-                   </a>
+                  <a
+                    href="https://console.aws.amazon.com/billing/home#/account"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block mb-6 text-[var(--accent)] hover:underline font-medium"
+                  >
+                    Click here to enable 'IAM Access' in AWS Console →
+                  </a>
                 )}
                 <div className="flex gap-4 justify-center">
                   <button
@@ -693,6 +791,47 @@ export default function OnboardingPage() {
           </div>
         )}
       </div>
+
+      {/* Mock Account Modal */}
+      {isMockModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[var(--background)] border border-[var(--glass-border)] rounded-xl w-full max-w-md p-6 shadow-2xl">
+            <h3 className="text-xl font-bold mb-2">Choose Mock Provider</h3>
+            <p className="text-[var(--foreground-muted)] mb-6">
+              Select which cloud provider&apos;s mock data you&apos;d like to explore.
+            </p>
+
+            <div className="space-y-3 mb-6">
+              {providers.map((provider) => (
+                <button
+                  key={provider.id}
+                  onClick={() => handleCreateMock(provider.id)}
+                  disabled={isLoading}
+                  className="w-full p-4 rounded-lg border border-[var(--glass-border)] hover:border-[var(--accent)] hover:bg-[var(--surface-hover)] transition-all flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{provider.icon}</span>
+                    <span className="font-semibold">{provider.name}</span>
+                  </div>
+                  {isLoading && selectedProvider === provider.id ? (
+                    <Loader2 size={16} className="animate-spin text-[var(--accent)]" />
+                  ) : (
+                    <ArrowRight size={16} className="text-[var(--foreground-muted)] group-hover:text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setIsMockModalOpen(false)}
+              disabled={isLoading}
+              className="w-full px-4 py-2 rounded-lg text-[var(--foreground-muted)] hover:bg-[var(--surface)] transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

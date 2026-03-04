@@ -5,6 +5,8 @@ import { encryptCredentials } from '../config/encryption';
 import * as awsCostExplorer from '../services/aws/costExplorer';
 import * as gcpBigQuery from '../services/gcp/bigquery';
 import * as azureCostManagement from '../services/azure/costManagement';
+// TODO: FOR TESTING ONLY - REMOVE IN PROD
+import { generateAndSaveMockData } from '../utils/generateMockData';
 
 const router = Router();
 
@@ -103,6 +105,58 @@ router.post('/', async (req: AuthRequest, res: Response) => {
   }
 });
 
+// TODO: FOR TESTING ONLY - REMOVE IN PROD
+/**
+ * POST /api/accounts/mock
+ * Add a mock AWS account for testing
+ */
+router.post('/mock', async (req: AuthRequest, res: Response) => {
+  try {
+    const provider = req.body.provider || 'aws';
+    if (!['aws', 'gcp', 'azure'].includes(provider)) {
+      res.status(400).json({ error: 'Invalid provider for mock account' });
+      return;
+    }
+
+    const providerNames = {
+      aws: 'Mock AWS Account',
+      gcp: 'Mock GCP Account',
+      azure: 'Mock Azure Account'
+    };
+
+    const account = new CloudAccount({
+      userId: req.userId,
+      provider: provider,
+      name: providerNames[provider as keyof typeof providerNames],
+      accountId: `MOCK-${provider.toUpperCase()}-${Date.now()}`,
+      encryptedCredentials: encryptCredentials({ accessKeyId: 'mock', secretAccessKey: 'mock', region: 'us-east-1' }),
+      status: 'connected',
+      metadata: {
+        isMock: true,
+      },
+    });
+
+    await account.save();
+
+    // Directly generate and save the mock JSON file when this account is created
+    generateAndSaveMockData(provider as 'aws' | 'gcp' | 'azure');
+
+    res.status(201).json({
+      message: 'Mock account connected successfully',
+      account: {
+        id: account._id,
+        provider: account.provider,
+        name: account.name,
+        accountId: account.accountId,
+        status: account.status,
+      },
+    });
+  } catch (error: any) {
+    console.error('Add mock account error:', error);
+    res.status(500).json({ error: error.message || 'Failed to add mock account' });
+  }
+});
+
 /**
  * POST /api/accounts/:id/test
  * Test connection to a cloud account
@@ -193,7 +247,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
     const today = new Date();
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
+
     const startDate = thirtyDaysAgo.toISOString().split('T')[0];
     const endDate = today.toISOString().split('T')[0];
 
@@ -204,7 +258,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
         const client = awsCostExplorer.createCostExplorerClient(account.encryptedCredentials);
         const costData = await awsCostExplorer.getCostAndUsage(client, startDate, endDate, 'DAILY');
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
-        
+
         syncResult = {
           success: true,
           message: `Synced ${costData.length} days of cost data`,
@@ -219,7 +273,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
       case 'gcp': {
         const costData = await gcpBigQuery.getDailyCosts(account.encryptedCredentials, startDate, endDate);
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
-        
+
         syncResult = {
           success: true,
           message: `Synced ${costData.length} days of cost data`,
@@ -234,7 +288,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
       case 'azure': {
         const costData = await azureCostManagement.getDailyCosts(account.encryptedCredentials, startDate, endDate);
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
-        
+
         syncResult = {
           success: true,
           message: `Synced ${costData.length} days of cost data`,
@@ -261,9 +315,9 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
     res.json(syncResult);
   } catch (error: any) {
     console.error('Sync error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: error.message || 'Failed to sync account data' 
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to sync account data'
     });
   }
 });

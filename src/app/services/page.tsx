@@ -29,9 +29,9 @@ const DonutChart = ({ data, size = 180 }: { data: { name: string; value: number;
   const strokeWidth = 24;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  
+
   let currentOffset = 0;
-  
+
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="transform -rotate-90">
@@ -48,7 +48,7 @@ const DonutChart = ({ data, size = 180 }: { data: { name: string; value: number;
           const dashLength = circumference * percentage;
           const offset = currentOffset;
           currentOffset += dashLength;
-          
+
           return (
             <circle
               key={i}
@@ -77,13 +77,13 @@ const DonutChart = ({ data, size = 180 }: { data: { name: string; value: number;
 // Animated counter component
 const AnimatedNumber = ({ value, prefix = "", suffix = "", decimals = 2 }: { value: number; prefix?: string; suffix?: string; decimals?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
-  
+
   useEffect(() => {
     const duration = 1000;
     const steps = 60;
     const increment = value / steps;
     let current = 0;
-    
+
     const timer = setInterval(() => {
       current += increment;
       if (current >= value) {
@@ -93,10 +93,10 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "", decimals = 2 }: { val
         setDisplayValue(current);
       }
     }, duration / steps);
-    
+
     return () => clearInterval(timer);
   }, [value]);
-  
+
   return <span>{prefix}{displayValue.toFixed(decimals)}{suffix}</span>;
 };
 
@@ -107,7 +107,7 @@ const MiniProgress = ({ percent, color }: { percent: number; color: string }) =>
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percent / 100) * circumference;
-  
+
   return (
     <svg width={size} height={size} className="transform -rotate-90">
       <circle
@@ -152,7 +152,7 @@ export default function ServicesPage() {
       const accountsResult = await accountsApi.getAll();
       const accountsExist = !!(accountsResult.data?.accounts && accountsResult.data.accounts.length > 0);
       setHasAccounts(accountsExist);
-      
+
       if (accountsExist) {
         const result = await costsApi.getServices();
         if (result.data) {
@@ -184,7 +184,7 @@ export default function ServicesPage() {
   }, [services]);
 
   // Chart colors
-  const chartColors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
+  const chartColors = ['#0d9488', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
   const chartData = aggregatedByService.map((item, i) => ({
     ...item,
     color: chartColors[i % chartColors.length]
@@ -216,7 +216,7 @@ export default function ServicesPage() {
   const totalCost = services.reduce((sum, item) => sum + item.cost, 0);
   const projectedTotal = services.reduce((sum, item) => sum + (item.projectedCost || item.cost), 0);
   const topService = services.length > 0 ? services.reduce((a, b) => a.cost > b.cost ? a : b) : null;
-  
+
   // Calculate day of month for projection accuracy
   const today = new Date();
   const daysElapsed = today.getDate();
@@ -312,7 +312,7 @@ export default function ServicesPage() {
           </p>
           <div className="flex items-center gap-2">
             <div className="flex-1 h-1.5 bg-[var(--background-tertiary)] rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--warning)] transition-all duration-1000"
                 style={{ width: `${projectionAccuracy}%` }}
               />
@@ -402,9 +402,9 @@ export default function ServicesPage() {
                     </div>
                   </div>
                   <div className="h-2 bg-[var(--background-tertiary)] rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full rounded-full transition-all duration-700 ease-out"
-                      style={{ 
+                      style={{
                         width: `${percent}%`,
                         background: `linear-gradient(90deg, ${chartColors[i]} 0%, ${chartColors[(i + 1) % chartColors.length]} 100%)`
                       }}
@@ -431,7 +431,7 @@ export default function ServicesPage() {
             />
           </div>
           <div className="flex gap-3">
-            <select 
+            <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
               className="select min-w-[140px]"
@@ -478,9 +478,9 @@ export default function ServicesPage() {
                     </td>
                     <td>
                       <div className="flex items-center gap-3">
-                        <div 
-                          className="w-2 h-2 rounded-full" 
-                          style={{ backgroundColor: getProviderColor(item.provider as any) }} 
+                        <div
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: getProviderColor(item.provider as any) }}
                         />
                         <span className="font-medium">{item.serviceName}</span>
                       </div>
@@ -505,8 +505,8 @@ export default function ServicesPage() {
                       <span className={clsx(
                         "text-sm font-medium",
                         percent > 20 ? "text-[var(--danger)]" :
-                        percent > 10 ? "text-[var(--warning)]" :
-                        "text-[var(--foreground-muted)]"
+                          percent > 10 ? "text-[var(--warning)]" :
+                            "text-[var(--foreground-muted)]"
                       )}>
                         {percent.toFixed(1)}%
                       </span>

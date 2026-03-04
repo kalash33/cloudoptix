@@ -5,7 +5,7 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 // GPT-OSS 120B Free - OpenAI's open-weight model
-const MODEL = 'openai/gpt-oss-120b:free';
+const MODEL = 'openai/gpt-4o-mini';
 
 export interface ResourceData {
   provider: 'aws' | 'gcp' | 'azure';

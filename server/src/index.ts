@@ -9,6 +9,7 @@ import authRoutes from './routes/auth';
 import accountRoutes from './routes/accounts';
 import costRoutes from './routes/costs';
 import recommendationRoutes from './routes/recommendations';
+import chatRoutes from './routes/chat';
 
 // Load environment variables
 dotenv.config();
@@ -25,7 +26,7 @@ app.use(express.json({ limit: '10mb' })); // Larger limit for GCP service accoun
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), query: req.query, originalUrl: req.originalUrl });
 });
 
 // API Routes
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/costs', costRoutes);
 app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -22,6 +22,8 @@ export interface ICloudAccount extends Document {
     curBucketName?: string; // S3 bucket for CUR reports (AWS)
     curReportPath?: string; // Path prefix for CUR reports
     curRegion?: string; // Region where CUR bucket is located
+    // TODO: FOR TESTING ONLY - REMOVE IN PROD
+    isMock?: boolean; // For testing mock data
   };
   createdAt: Date;
   updatedAt: Date;
@@ -51,7 +53,7 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
     },
     encryptedCredentials: {
       type: String,
-      required: function(this: any) {
+      required: function (this: any) {
         return this.authType === 'keys';
       },
     },
@@ -86,6 +88,8 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
       curBucketName: String,
       curReportPath: String,
       curRegion: String,
+      // TODO: FOR TESTING ONLY - REMOVE IN PROD
+      isMock: Boolean,
     },
   },
   {

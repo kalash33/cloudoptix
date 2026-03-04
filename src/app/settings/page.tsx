@@ -25,12 +25,12 @@ import { accountsApi } from "@/lib/api";
 import { getProviderName, getProviderColor } from "@/lib/mockData";
 
 interface CloudAccount {
-  _id: string;
+  id: string;
   provider: "aws" | "gcp" | "azure";
   name: string;
   accountId?: string;
   status: string;
-  lastSync?: string;
+  lastSyncAt?: string;
   createdAt?: string;
 }
 
@@ -160,17 +160,6 @@ function GeneralSettings() {
       <div className="glass-card p-6">
         <h3 className="text-lg font-semibold mb-6">Preferences</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Dark Mode</p>
-              <p className="text-sm text-[var(--foreground-muted)]">
-                Use dark theme across the application
-              </p>
-            </div>
-            <button className="relative w-12 h-6 rounded-full bg-[var(--primary)] transition-colors">
-              <div className="absolute right-1 top-1 w-4 h-4 rounded-full bg-white transition-transform" />
-            </button>
-          </div>
 
           <div className="flex items-center justify-between">
             <div>
@@ -215,7 +204,7 @@ function CloudAccountsSettings() {
       setLoading(true);
       const result = await accountsApi.getAll();
       if (result.data?.accounts) {
-        setAccounts(result.data.accounts);
+        setAccounts(result.data.accounts.map((a: any) => ({ ...a, id: a._id || a.id })));
       }
     } catch (error) {
       console.error("Error fetching accounts:", error);
@@ -230,11 +219,11 @@ function CloudAccountsSettings() {
 
   const handleDelete = async (accountId: string) => {
     if (!confirm("Are you sure you want to remove this cloud account?")) return;
-    
+
     setDeleting(accountId);
     try {
       await accountsApi.delete(accountId);
-      setAccounts(accounts.filter(a => a._id !== accountId));
+      setAccounts(accounts.filter(a => a.id !== accountId));
     } catch (error) {
       console.error("Error deleting account:", error);
     } finally {
@@ -294,7 +283,7 @@ function CloudAccountsSettings() {
           <div className="space-y-4">
             {accounts.map((account) => (
               <div
-                key={account._id}
+                key={account.id}
                 className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--glass-border)]"
               >
                 <div className="flex items-center gap-4">
@@ -337,14 +326,14 @@ function CloudAccountsSettings() {
                           account.status === "connected"
                             ? "bg-[var(--success)]"
                             : account.status === "error"
-                            ? "bg-[var(--danger)]"
-                            : "bg-[var(--warning)]"
+                              ? "bg-[var(--danger)]"
+                              : "bg-[var(--warning)]"
                         )}
                       />
                       <span className="text-sm capitalize">{account.status}</span>
                     </div>
                     <p className="text-xs text-[var(--foreground-muted)]">
-                      Last sync: {formatLastSync(account.lastSync)}
+                      Last sync: {formatLastSync(account.lastSyncAt)}
                     </p>
                   </div>
 
@@ -352,13 +341,13 @@ function CloudAccountsSettings() {
                     <button className="btn btn-ghost p-2" title="Sync now">
                       <RefreshCw className="w-4 h-4" />
                     </button>
-                    <button 
+                    <button
                       className="btn btn-ghost p-2 text-[var(--danger)]"
-                      onClick={() => handleDelete(account._id)}
-                      disabled={deleting === account._id}
+                      onClick={() => handleDelete(account.id)}
+                      disabled={deleting === account.id}
                       title="Remove account"
                     >
-                      {deleting === account._id ? (
+                      {deleting === account.id ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Trash2 className="w-4 h-4" />
@@ -379,21 +368,21 @@ function CloudAccountsSettings() {
         </p>
 
         <div className="grid grid-cols-3 gap-4">
-          <Link 
+          <Link
             href="/onboarding"
             className="p-6 rounded-xl bg-[var(--surface)] border border-[var(--glass-border)] hover:border-[var(--aws)] transition-colors text-center"
           >
             <Cloud className="w-8 h-8 mx-auto mb-2 text-[var(--aws)]" />
             <p className="font-medium">AWS</p>
           </Link>
-          <Link 
+          <Link
             href="/onboarding"
             className="p-6 rounded-xl bg-[var(--surface)] border border-[var(--glass-border)] hover:border-[var(--gcp)] transition-colors text-center"
           >
             <Cloud className="w-8 h-8 mx-auto mb-2 text-[var(--gcp)]" />
             <p className="font-medium">Google Cloud</p>
           </Link>
-          <Link 
+          <Link
             href="/onboarding"
             className="p-6 rounded-xl bg-[var(--surface)] border border-[var(--glass-border)] hover:border-[var(--azure)] transition-colors text-center"
           >
@@ -410,7 +399,7 @@ function NotificationSettings() {
   return (
     <div className="glass-card p-6">
       <h3 className="text-lg font-semibold mb-6">Notification Preferences</h3>
-      
+
       <div className="space-y-6">
         <div>
           <h4 className="font-medium mb-4">Email Notifications</h4>
@@ -454,7 +443,7 @@ function SecuritySettings() {
     <div className="space-y-6">
       <div className="glass-card p-6">
         <h3 className="text-lg font-semibold mb-6">Security Settings</h3>
-        
+
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -564,7 +553,7 @@ function BillingSettings() {
     <div className="space-y-6">
       <div className="glass-card p-6">
         <h3 className="text-lg font-semibold mb-6">Current Plan</h3>
-        
+
         <div className="p-6 rounded-xl bg-[var(--primary-subtle)] border border-[var(--primary)]/30 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>

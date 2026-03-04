@@ -49,7 +49,7 @@ export const SpendTrend = memo(function SpendTrend({ data, forecastData, budgetL
         <div>
           <h3 className="text-lg font-semibold">Spending Trend</h3>
           <p className="text-sm text-[var(--foreground-muted)]">
-            Daily cloud spend with 7-day forecast
+            Cloud spend trend with forecast
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -92,13 +92,13 @@ export const SpendTrend = memo(function SpendTrend({ data, forecastData, budgetL
                 <stop offset="95%" stopColor="var(--azure)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            
+
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="var(--glass-border)"
               vertical={false}
             />
-            
+
             <XAxis
               dataKey="date"
               tickFormatter={(value) => format(parseISO(value), "MMM d")}
@@ -108,7 +108,7 @@ export const SpendTrend = memo(function SpendTrend({ data, forecastData, budgetL
               axisLine={false}
               interval="preserveStartEnd"
             />
-            
+
             <YAxis
               tickFormatter={(value) => `$${value}`}
               stroke="var(--foreground-muted)"
@@ -117,7 +117,7 @@ export const SpendTrend = memo(function SpendTrend({ data, forecastData, budgetL
               axisLine={false}
               width={60}
             />
-            
+
             <Tooltip
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length && typeof label === "string") {
@@ -199,7 +199,7 @@ export const SpendTrend = memo(function SpendTrend({ data, forecastData, budgetL
               fill="url(#awsGradient)"
               strokeWidth={2}
             />
-            
+
             {/* Forecast line */}
             <Area
               type="monotone"
