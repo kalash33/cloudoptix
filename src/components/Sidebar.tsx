@@ -113,7 +113,7 @@ export function Sidebar() {
   const handleConnectMockAccount = async () => {
     setIsMockLoading(true);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === "production" ? "https://7me5qfgefh.us-east-1.awsapprunner.com" : "http://localhost:5001");
       const response = await fetch(`${API_URL}/api/accounts/mock`, {
         method: "POST",
         headers: {

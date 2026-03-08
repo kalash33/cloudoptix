@@ -217,7 +217,7 @@ export default function OnboardingPage() {
     setTestResult(null);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === "production" ? "https://7me5qfgefh.us-east-1.awsapprunner.com" : "http://localhost:5001");
 
       const response = await fetch(`${API_URL}/api/accounts`, {
         method: "POST",
@@ -263,7 +263,7 @@ export default function OnboardingPage() {
     setIsLoading(true);
     setSelectedProvider(provider);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === "production" ? "https://7me5qfgefh.us-east-1.awsapprunner.com" : "http://localhost:5001");
       const response = await fetch(`${API_URL}/api/accounts/mock`, {
         method: "POST",
         headers: {
@@ -299,7 +299,7 @@ export default function OnboardingPage() {
     if (!selectedProvider) return;
     setIsLoading(true);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === "production" ? "https://7me5qfgefh.us-east-1.awsapprunner.com" : "http://localhost:5001");
       const response = await fetch(`${API_URL}/api/accounts/mock`, {
         method: "POST",
         headers: {
