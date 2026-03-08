@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' ? true : (process.env.FRONTEND_URL || 'http://localhost:3000'),
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' })); // Larger limit for GCP service account keys
