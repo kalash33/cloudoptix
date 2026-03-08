@@ -18,8 +18,9 @@ import {
   Loader2,
 } from "lucide-react";
 import { clsx } from "clsx";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { accountsApi } from "@/lib/api";
+import { accountsApi, recommendationsApi } from "@/lib/api";
 import {
   formatCurrency,
   getProviderName,
@@ -43,6 +44,7 @@ interface Resource {
 }
 
 export default function ResourcesPage() {
+  const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [providerFilter, setProviderFilter] = useState<ProviderFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,7 +59,13 @@ export default function ResourcesPage() {
         const accountsResult = await accountsApi.getAll();
         const accountsExist = !!(accountsResult.data?.accounts && accountsResult.data.accounts.length > 0);
         setHasAccounts(accountsExist);
-        // Resources will be fetched via sync once accounts are connected
+
+        if (accountsExist) {
+          const resResult = await recommendationsApi.getResources();
+          if (resResult.data?.resources) {
+            setResources(resResult.data.resources);
+          }
+        }
       } catch (error) {
         console.error("Error checking accounts:", error);
       } finally {
@@ -273,7 +281,7 @@ export default function ResourcesPage() {
             </thead>
             <tbody>
               {filteredResources.map((resource) => (
-                <ResourceRow key={resource.id} resource={resource} />
+                <ResourceRow key={resource.id} resource={resource} router={router} />
               ))}
             </tbody>
           </table>
@@ -283,7 +291,7 @@ export default function ResourcesPage() {
   );
 }
 
-function ResourceRow({ resource }: { resource: Resource }) {
+function ResourceRow({ resource, router }: { resource: Resource, router: any }) {
   const statusConfig: Record<string, { icon: any; label: string; color: string; bg: string }> = {
     running: {
       icon: CheckCircle,
@@ -305,7 +313,7 @@ function ResourceRow({ resource }: { resource: Resource }) {
     },
   };
 
-  const status = statusConfig[resource.status];
+  const status = statusConfig[resource.status] || statusConfig.running;
   const StatusIcon = status.icon;
 
   const getUtilizationColor = (value: number) => {
@@ -315,7 +323,10 @@ function ResourceRow({ resource }: { resource: Resource }) {
   };
 
   return (
-    <tr className="group">
+    <tr
+      className="group cursor-pointer hover:bg-[var(--surface)] transition-colors"
+      onClick={() => router.push(`/resources/${encodeURIComponent(resource.id)}`)}
+    >
       <td>
         <div className="flex items-center gap-3">
           <div
@@ -358,8 +369,8 @@ function ResourceRow({ resource }: { resource: Resource }) {
                 "h-full rounded-full transition-all",
                 resource.cpuUtilization < 20 && "bg-[var(--danger)]",
                 resource.cpuUtilization >= 20 &&
-                  resource.cpuUtilization < 50 &&
-                  "bg-[var(--warning)]",
+                resource.cpuUtilization < 50 &&
+                "bg-[var(--warning)]",
                 resource.cpuUtilization >= 50 && "bg-[var(--success)]"
               )}
               style={{ width: `${resource.cpuUtilization}%` }}
@@ -383,8 +394,8 @@ function ResourceRow({ resource }: { resource: Resource }) {
                 "h-full rounded-full transition-all",
                 resource.memoryUtilization < 20 && "bg-[var(--danger)]",
                 resource.memoryUtilization >= 20 &&
-                  resource.memoryUtilization < 50 &&
-                  "bg-[var(--warning)]",
+                resource.memoryUtilization < 50 &&
+                "bg-[var(--warning)]",
                 resource.memoryUtilization >= 50 && "bg-[var(--success)]"
               )}
               style={{ width: `${resource.memoryUtilization}%` }}

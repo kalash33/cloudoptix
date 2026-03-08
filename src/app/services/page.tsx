@@ -19,6 +19,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { clsx } from "clsx";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { accountsApi, costsApi } from "@/lib/api";
 import { getProviderName, getProviderColor } from "@/lib/mockData";
@@ -135,6 +136,7 @@ const MiniProgress = ({ percent, color }: { percent: number; color: string }) =>
 };
 
 export default function ServicesPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [services, setServices] = useState<Array<{ service: string; provider: string; cost: number; projectedCost?: number }>>([]);
   const [loading, setLoading] = useState(true);
@@ -472,7 +474,11 @@ export default function ServicesPage() {
               {filteredServices.map((item, idx) => {
                 const percent = totalCost > 0 ? (item.cost / totalCost) * 100 : 0;
                 return (
-                  <tr key={idx} className="group hover:bg-[var(--surface)] transition-colors">
+                  <tr
+                    key={idx}
+                    onClick={() => router.push(`/services/${encodeURIComponent(item.serviceName)}`)}
+                    className="group hover:bg-[var(--surface)] transition-colors cursor-pointer"
+                  >
                     <td>
                       <MiniProgress percent={percent} color={getProviderColor(item.provider as any)} />
                     </td>
