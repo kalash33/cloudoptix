@@ -1,5 +1,5 @@
 // API Client v2 - updated 2026-02-28
-const API_URL = "http://localhost:5001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 interface ApiResponse<T> {
   data?: T;
