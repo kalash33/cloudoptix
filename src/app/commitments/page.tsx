@@ -58,6 +58,13 @@ export default function CommitmentsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
+          <div className="mb-8 p-4 bg-[var(--primary)]/10 border border-[var(--primary)]/20 rounded-xl flex items-start gap-3 text-left">
+            <AlertCircle className="w-5 h-5 text-[var(--primary)] shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-[var(--primary)]">Feature Coming Soon</h3>
+              <p className="text-sm text-[var(--primary)]/80">Commitment Management is currently in development.</p>
+            </div>
+          </div>
           <div className="w-20 h-20 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center mx-auto mb-6">
             <Wallet className="w-10 h-10 text-[var(--foreground-muted)]" />
           </div>
@@ -77,6 +84,14 @@ export default function CommitmentsPage() {
   // Empty state when no commitments found
   return (
     <div className="min-h-screen">
+      <div className="mb-8 p-4 bg-[var(--primary)]/10 border border-[var(--primary)]/20 rounded-xl flex items-start gap-3">
+        <AlertCircle className="w-5 h-5 text-[var(--primary)] shrink-0 mt-0.5" />
+        <div>
+          <h3 className="font-semibold text-[var(--primary)]">Feature Coming Soon</h3>
+          <p className="text-sm text-[var(--primary)]/80">Commitment Management is currently in development and will be available in an upcoming release. The data below is for preview purposes.</p>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

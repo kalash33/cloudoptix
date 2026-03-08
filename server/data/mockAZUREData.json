@@ -2,390 +2,6 @@
   {
     "service": "Virtual Machines",
     "usageType": "D2s v3 Compute Hours",
-    "cost": 20,
-    "usageQuantity": 200,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "E4s v3 Compute Hours",
-    "cost": 25,
-    "usageQuantity": 250,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "Premium SSD Managed Disks",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Compute",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Storage",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "Blob Storage Standard LRS",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "File Storage Transaction",
-    "cost": 7,
-    "usageQuantity": 70,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Execution Time",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Total Executions",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Kubernetes Service",
-    "usageType": "Standard Uptime SLA",
-    "cost": 31,
-    "usageQuantity": 310,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "App Service",
-    "usageType": "Premium V3 App Service Plan",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Cosmos DB",
-    "usageType": "100 RU/s/hour",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-05",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "D2s v3 Compute Hours",
-    "cost": 14.7,
-    "usageQuantity": 147,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "E4s v3 Compute Hours",
-    "cost": 18.2,
-    "usageQuantity": 182,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "Premium SSD Managed Disks",
-    "cost": 21.7,
-    "usageQuantity": 217,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Compute",
-    "cost": 17.5,
-    "usageQuantity": 175,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Storage",
-    "cost": 23.1,
-    "usageQuantity": 231,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "Blob Storage Standard LRS",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "File Storage Transaction",
-    "cost": 5.6,
-    "usageQuantity": 56,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Execution Time",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Total Executions",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Kubernetes Service",
-    "usageType": "Standard Uptime SLA",
-    "cost": 21,
-    "usageQuantity": 210,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "App Service",
-    "usageType": "Premium V3 App Service Plan",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Cosmos DB",
-    "usageType": "100 RU/s/hour",
-    "cost": 17.5,
-    "usageQuantity": 175,
-    "date": "2025-09-06",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "D2s v3 Compute Hours",
-    "cost": 10.5,
-    "usageQuantity": 105,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "E4s v3 Compute Hours",
-    "cost": 14,
-    "usageQuantity": 140,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "Premium SSD Managed Disks",
-    "cost": 17.5,
-    "usageQuantity": 175,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Compute",
-    "cost": 18.2,
-    "usageQuantity": 182,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Storage",
-    "cost": 23.8,
-    "usageQuantity": 238,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "Blob Storage Standard LRS",
-    "cost": 4.9,
-    "usageQuantity": 49,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "File Storage Transaction",
-    "cost": 6.3,
-    "usageQuantity": 63,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Execution Time",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Total Executions",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Kubernetes Service",
-    "usageType": "Standard Uptime SLA",
-    "cost": 21.7,
-    "usageQuantity": 217,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "App Service",
-    "usageType": "Premium V3 App Service Plan",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Cosmos DB",
-    "usageType": "100 RU/s/hour",
-    "cost": 18.2,
-    "usageQuantity": 182,
-    "date": "2025-09-07",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "D2s v3 Compute Hours",
-    "cost": 16,
-    "usageQuantity": 160,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "E4s v3 Compute Hours",
-    "cost": 21,
-    "usageQuantity": 210,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "Premium SSD Managed Disks",
-    "cost": 26,
-    "usageQuantity": 260,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Compute",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure SQL Database",
-    "usageType": "General Purpose Storage",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "Blob Storage Standard LRS",
-    "cost": 8,
-    "usageQuantity": 80,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Storage Accounts",
-    "usageType": "File Storage Transaction",
-    "cost": 10,
-    "usageQuantity": 100,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Execution Time",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Functions",
-    "usageType": "Total Executions",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Azure Kubernetes Service",
-    "usageType": "Standard Uptime SLA",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "App Service",
-    "usageType": "Premium V3 App Service Plan",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Cosmos DB",
-    "usageType": "100 RU/s/hour",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-08",
-    "provider": "azure"
-  },
-  {
-    "service": "Virtual Machines",
-    "usageType": "D2s v3 Compute Hours",
     "cost": 17,
     "usageQuantity": 170,
     "date": "2025-09-09",
@@ -17373,6 +16989,390 @@
     "cost": 33.8,
     "usageQuantity": 338,
     "date": "2026-03-04",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "D2s v3 Compute Hours",
+    "cost": 26,
+    "usageQuantity": 260,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "E4s v3 Compute Hours",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "Premium SSD Managed Disks",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Compute",
+    "cost": 35.1,
+    "usageQuantity": 351,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Storage",
+    "cost": 45.5,
+    "usageQuantity": 455,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "Blob Storage Standard LRS",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "File Storage Transaction",
+    "cost": 9.1,
+    "usageQuantity": 91,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Execution Time",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Total Executions",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Kubernetes Service",
+    "usageType": "Standard Uptime SLA",
+    "cost": 40.3,
+    "usageQuantity": 403,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "App Service",
+    "usageType": "Premium V3 App Service Plan",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Cosmos DB",
+    "usageType": "100 RU/s/hour",
+    "cost": 35.1,
+    "usageQuantity": 351,
+    "date": "2026-03-05",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "D2s v3 Compute Hours",
+    "cost": 27.3,
+    "usageQuantity": 273,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "E4s v3 Compute Hours",
+    "cost": 33.8,
+    "usageQuantity": 338,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "Premium SSD Managed Disks",
+    "cost": 40.3,
+    "usageQuantity": 403,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Compute",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Storage",
+    "cost": 42.9,
+    "usageQuantity": 429,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "Blob Storage Standard LRS",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "File Storage Transaction",
+    "cost": 10.4,
+    "usageQuantity": 104,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Execution Time",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Total Executions",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Kubernetes Service",
+    "usageType": "Standard Uptime SLA",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "App Service",
+    "usageType": "Premium V3 App Service Plan",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Cosmos DB",
+    "usageType": "100 RU/s/hour",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-06",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "D2s v3 Compute Hours",
+    "cost": 13.65,
+    "usageQuantity": 137,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "E4s v3 Compute Hours",
+    "cost": 18.2,
+    "usageQuantity": 182,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "Premium SSD Managed Disks",
+    "cost": 22.75,
+    "usageQuantity": 228,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Compute",
+    "cost": 23.66,
+    "usageQuantity": 237,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Storage",
+    "cost": 30.94,
+    "usageQuantity": 309,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "Blob Storage Standard LRS",
+    "cost": 6.37,
+    "usageQuantity": 64,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "File Storage Transaction",
+    "cost": 8.19,
+    "usageQuantity": 82,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Execution Time",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Total Executions",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Kubernetes Service",
+    "usageType": "Standard Uptime SLA",
+    "cost": 28.21,
+    "usageQuantity": 282,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "App Service",
+    "usageType": "Premium V3 App Service Plan",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Cosmos DB",
+    "usageType": "100 RU/s/hour",
+    "cost": 23.66,
+    "usageQuantity": 237,
+    "date": "2026-03-07",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "D2s v3 Compute Hours",
+    "cost": 14.56,
+    "usageQuantity": 146,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "E4s v3 Compute Hours",
+    "cost": 19.11,
+    "usageQuantity": 191,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Virtual Machines",
+    "usageType": "Premium SSD Managed Disks",
+    "cost": 23.66,
+    "usageQuantity": 237,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Compute",
+    "cost": 24.57,
+    "usageQuantity": 246,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure SQL Database",
+    "usageType": "General Purpose Storage",
+    "cost": 31.85,
+    "usageQuantity": 319,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "Blob Storage Standard LRS",
+    "cost": 7.28,
+    "usageQuantity": 73,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Storage Accounts",
+    "usageType": "File Storage Transaction",
+    "cost": 9.1,
+    "usageQuantity": 91,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Execution Time",
+    "cost": 2.73,
+    "usageQuantity": 27,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Functions",
+    "usageType": "Total Executions",
+    "cost": 2.73,
+    "usageQuantity": 27,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Azure Kubernetes Service",
+    "usageType": "Standard Uptime SLA",
+    "cost": 27.3,
+    "usageQuantity": 273,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "App Service",
+    "usageType": "Premium V3 App Service Plan",
+    "cost": 2.73,
+    "usageQuantity": 27,
+    "date": "2026-03-08",
+    "provider": "azure"
+  },
+  {
+    "service": "Cosmos DB",
+    "usageType": "100 RU/s/hour",
+    "cost": 24.57,
+    "usageQuantity": 246,
+    "date": "2026-03-08",
     "provider": "azure"
   }
 ]

@@ -236,7 +236,8 @@ Respond ONLY with valid JSON (no markdown):
 
         const response = await bedrockClient.send(command);
         const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-        const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
+        let content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
+        content = content.replace(/<reasoning>[\s\S]*?<\/reasoning>/g, '').trim();
         const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || [null, content];
         const parsed = JSON.parse(jsonMatch[1] || content);
 
@@ -324,8 +325,9 @@ Respond ONLY with valid JSON(no markdown):
 
     const response = await bedrockClient.send(command);
     const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-    const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
-    const jsonMatch = content.match(/```(?: json) ?\s * ([\s\S] *?) \s * ```/) || [null, content];
+    let content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
+    content = content.replace(/<reasoning>[\s\S]*?<\/reasoning>/g, '').trim();
+    const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || [null, content];
     const parsed = JSON.parse(jsonMatch[1] || content);
     const resources = parsed.resources || [];
 
@@ -418,8 +420,9 @@ Respond ONLY with valid JSON (no markdown):
         const responseBody = JSON.parse(new TextDecoder().decode(response.body));
         console.log(`[Bedrock API] Received response for ${service.service}: `, JSON.stringify(responseBody, null, 2));
 
-        const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
-        const jsonMatch = content.match(/```(?: json) ?\s * ([\s\S] *?) \s * ```/) || [null, content];
+        let content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
+        content = content.replace(/<reasoning>[\s\S]*?<\/reasoning>/g, '').trim();
+        const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || [null, content];
         const parsed = JSON.parse(jsonMatch[1] || content);
 
         const recs = parsed.recommendations || [];

@@ -218,32 +218,6 @@ export function Sidebar() {
           );
         })}
 
-        {/* MOCK ACCOUNT BUTTON - GLOBAL */}
-        {!collapsed && (
-          <div className="px-4 mt-4 mb-2 space-y-2">
-            <select
-              className="w-full bg-[var(--surface)] border border-[var(--glass-border)] rounded px-2 py-1 text-sm text-[var(--foreground)]"
-              value={mockProvider}
-              onChange={(e) => setMockProvider(e.target.value)}
-            >
-              <option value="aws">Mock AWS</option>
-              <option value="gcp">Mock GCP</option>
-              <option value="azure">Mock Azure</option>
-            </select>
-            <button
-              onClick={handleConnectMockAccount}
-              disabled={isMockLoading}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border border-dashed border-[var(--foreground-muted)] text-[var(--foreground-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] transition-colors"
-            >
-              {isMockLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-[var(--primary)]" />
-              ) : (
-                <Cloud className="w-4 h-4" />
-              )}
-              <span>Add Mock Data</span>
-            </button>
-          </div>
-        )}
       </nav>
 
       {/* Collapse Toggle */}
