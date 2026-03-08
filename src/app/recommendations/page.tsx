@@ -44,6 +44,7 @@ type SortOption = "savings" | "effort" | "risk";
 
 interface Recommendation {
   id: string;
+  _id: string; // From MongoDB Backend
   type: string;
   title: string;
   description: string;

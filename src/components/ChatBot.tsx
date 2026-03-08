@@ -53,13 +53,14 @@ export function ChatBot() {
 
             const res = await chatApi.sendMessage(userMsg.content, history);
 
-            if (res.data) {
+            if (res.data && res.data.reply) {
+                const replyText = res.data.reply;
                 setMessages((prev) => [
                     ...prev,
                     {
                         id: (Date.now() + 1).toString(),
                         role: "assistant",
-                        content: res.data.reply,
+                        content: replyText,
                     },
                 ]);
             }
