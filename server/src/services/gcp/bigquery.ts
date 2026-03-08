@@ -23,7 +23,7 @@ export function createBigQueryClient(encryptedCredentials: string): {
   projectId: string;
   datasetId: string;
 } {
-  const credentials = decryptCredentials(encryptedCredentials) as GCPCredentials;
+  const credentials = decryptCredentials(encryptedCredentials) as unknown as GCPCredentials;
 
   // Parse the service account key JSON
   const serviceAccountKey = JSON.parse(credentials.serviceAccountKey);

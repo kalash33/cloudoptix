@@ -1,14 +1,17 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import * as dynamoose from 'dynamoose';
+import { Item } from 'dynamoose/dist/Item';
+import crypto from 'crypto';
 
 export type CloudProvider = 'aws' | 'gcp' | 'azure';
 export type AccountStatus = 'pending' | 'connected' | 'error' | 'syncing';
 
-export interface ICloudAccount extends Document {
-  userId: mongoose.Types.ObjectId;
+export interface ICloudAccount extends Item {
+  id: string; // Native UUID 
+  userId: string; // Linked User UUID
   provider: CloudProvider;
   name: string;
-  accountId: string; // AWS Account ID, GCP Project ID, or Azure Subscription ID
-  encryptedCredentials?: string; // AES-256 encrypted credentials (required for authType='keys')
+  accountId: string;
+  encryptedCredentials?: string;
   authType: 'keys' | 'role';
   roleArn?: string;
   externalId?: string;
@@ -17,25 +20,32 @@ export interface ICloudAccount extends Document {
   lastSyncError?: string;
   metadata?: {
     region?: string;
-    bigQueryDataset?: string; // For GCP
-    tenantId?: string; // For Azure
-    curBucketName?: string; // S3 bucket for CUR reports (AWS)
-    curReportPath?: string; // Path prefix for CUR reports
-    curRegion?: string; // Region where CUR bucket is located
-    // TODO: FOR TESTING ONLY - REMOVE IN PROD
-    isMock?: boolean; // For testing mock data
+    bigQueryDataset?: string;
+    tenantId?: string;
+    curBucketName?: string;
+    curReportPath?: string;
+    curRegion?: string;
+    isMock?: boolean;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const cloudAccountSchema = new Schema<ICloudAccount>(
+const cloudAccountSchema = new dynamoose.Schema(
   {
+    id: {
+      type: String,
+      hashKey: true,
+      default: () => crypto.randomUUID(),
+    },
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: true,
-      index: true,
+      index: {
+        name: 'userId-provider-index',
+        type: 'global',
+        rangeKey: 'provider'
+      },
     },
     provider: {
       type: String,
@@ -45,7 +55,6 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
     name: {
       type: String,
       required: true,
-      trim: true,
     },
     accountId: {
       type: String,
@@ -53,9 +62,7 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
     },
     encryptedCredentials: {
       type: String,
-      required: function (this: any) {
-        return this.authType === 'keys';
-      },
+      required: false,
     },
     authType: {
       type: String,
@@ -64,11 +71,9 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
     },
     roleArn: {
       type: String,
-      trim: true,
     },
     externalId: {
       type: String,
-      trim: true,
     },
     status: {
       type: String,
@@ -82,14 +87,16 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
       type: String,
     },
     metadata: {
-      region: String,
-      bigQueryDataset: String,
-      tenantId: String,
-      curBucketName: String,
-      curReportPath: String,
-      curRegion: String,
-      // TODO: FOR TESTING ONLY - REMOVE IN PROD
-      isMock: Boolean,
+      type: Object,
+      schema: {
+        region: String,
+        bigQueryDataset: String,
+        tenantId: String,
+        curBucketName: String,
+        curReportPath: String,
+        curRegion: String,
+        isMock: Boolean,
+      }
     },
   },
   {
@@ -97,7 +104,5 @@ const cloudAccountSchema = new Schema<ICloudAccount>(
   }
 );
 
-// Compound index for user + provider queries
-cloudAccountSchema.index({ userId: 1, provider: 1 });
-
-export default mongoose.model<ICloudAccount>('CloudAccount', cloudAccountSchema);
+export const CloudAccountModel = dynamoose.model<ICloudAccount>('CloudAccount', cloudAccountSchema);
+export default CloudAccountModel;

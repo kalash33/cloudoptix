@@ -1,13 +1,14 @@
 import { Router, Response } from 'express';
 import { auth, AuthRequest } from '../middleware/auth';
 import { gatherServiceCostData } from './recommendations'; // Reuse existing logic
+import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 
 const router = Router();
 
-// Ensure OpenRouter config is loaded
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
+const bedrockClient = new BedrockRuntimeClient({
+    region: process.env.AWS_REGION || 'us-east-1',
+});
+const MODEL_ID = 'openai.gpt-oss-120b-1:0';
 
 router.post('/', auth, async (req: AuthRequest, res: Response) => {
     try {
@@ -16,11 +17,6 @@ router.post('/', auth, async (req: AuthRequest, res: Response) => {
 
         if (!message) {
             res.status(400).json({ error: 'Message is required' });
-            return;
-        }
-
-        if (!OPENROUTER_API_KEY) {
-            res.status(500).json({ error: 'OpenRouter API key not configured' });
             return;
         }
 
@@ -48,31 +44,28 @@ Answer the user's question concisely and accurately based on their actual data i
 Format your responses using clean markdown (e.g., bolding, bullet points) for readability.
 If the user asks a general cloud question outside of their data (e.g. 'what is a spot instance?'), answer it normally.`;
 
-        const messages = [
-            { role: 'system', content: systemPrompt },
-            ...conversationHistory,
-            { role: 'user', content: message }
-        ];
+        const payload = {
+            max_tokens: 1024,
+            messages: [
+                { role: 'system', content: systemPrompt },
+                ...conversationHistory,
+                { role: 'user', content: message }
+            ],
+            temperature: 0.7,
+        };
 
-        const response = await fetch(OPENROUTER_URL, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: MODEL,
-                messages: messages,
-                temperature: 0.7,
-            }),
+        const command = new InvokeModelCommand({
+            modelId: MODEL_ID,
+            contentType: 'application/json',
+            accept: 'application/json',
+            body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-            throw new Error(`OpenRouter API failed with status ${response.status}`);
-        }
+        const response = await bedrockClient.send(command);
+        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
 
-        const data = await response.json() as any;
-        const aiResponse = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response at this time.";
+        let aiResponse = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || "I'm sorry, I couldn't generate a response at this time.";
+        aiResponse = aiResponse.replace(/<reasoning>[\s\S]*?<\/reasoning>/g, '').trim();
 
         res.json({ reply: aiResponse });
 

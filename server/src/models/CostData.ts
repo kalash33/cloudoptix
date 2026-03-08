@@ -1,7 +1,10 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import * as dynamoose from 'dynamoose';
+import { Item } from 'dynamoose/dist/Item';
+import crypto from 'crypto';
 
-export interface ICostData extends Document {
-  accountId: mongoose.Types.ObjectId;
+export interface ICostData extends Item {
+  id: string;
+  accountId: string;
   provider: 'aws' | 'gcp' | 'azure';
   date: Date;
   service: string;
@@ -10,16 +13,25 @@ export interface ICostData extends Document {
   usageType?: string;
   region?: string;
   metadata?: Record<string, any>;
-  createdAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const costDataSchema = new Schema<ICostData>(
+const costDataSchema = new dynamoose.Schema(
   {
+    id: {
+      type: String,
+      hashKey: true,
+      default: () => crypto.randomUUID(),
+    },
     accountId: {
-      type: Schema.Types.ObjectId,
-      ref: 'CloudAccount',
+      type: String,
       required: true,
-      index: true,
+      index: {
+        name: 'accountId-date-index',
+        type: 'global',
+        rangeKey: 'date'
+      },
     },
     provider: {
       type: String,
@@ -44,15 +56,14 @@ const costDataSchema = new Schema<ICostData>(
     },
     usageType: String,
     region: String,
-    metadata: Schema.Types.Mixed,
+    metadata: {
+      type: Object,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Compound indexes for efficient queries
-costDataSchema.index({ accountId: 1, date: -1 });
-costDataSchema.index({ accountId: 1, service: 1, date: -1 });
-
-export default mongoose.model<ICostData>('CostData', costDataSchema);
+export const CostDataModel = dynamoose.model<ICostData>('CostData', costDataSchema);
+export default CostDataModel;

@@ -26,7 +26,7 @@ export const auth = async (
     }
 
     const decoded = jwt.verify(token, jwtSecret) as { userId: string };
-    const user = await User.findById(decoded.userId);
+    const user = await User.get(decoded.userId);
 
     if (!user) {
       res.status(401).json({ error: 'User not found' });
@@ -34,7 +34,7 @@ export const auth = async (
     }
 
     req.user = user;
-    req.userId = user._id.toString();
+    req.userId = user.id;
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });

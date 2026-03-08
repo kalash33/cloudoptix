@@ -22,10 +22,8 @@ router.get('/summary', async (req: AuthRequest, res: Response) => {
   try {
     const { startDate: queryStart, endDate: queryEnd } = req.query;
 
-    const accounts = await CloudAccount.find({
-      userId: req.userId,
-      status: 'connected',
-    });
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.filter(a => a.status === 'connected');
 
     if (accounts.length === 0) {
       res.json({
@@ -159,10 +157,8 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
   try {
     const { startDate: queryStart, endDate: queryEnd } = req.query;
 
-    const accounts = await CloudAccount.find({
-      userId: req.userId,
-      status: 'connected',
-    });
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.filter(a => a.status === 'connected');
 
     if (accounts.length === 0) {
       res.json({ data: [], message: 'No connected accounts' });
@@ -259,10 +255,8 @@ router.get('/daily', async (req: AuthRequest, res: Response) => {
  */
 router.get('/services', async (req: AuthRequest, res: Response) => {
   try {
-    const accounts = await CloudAccount.find({
-      userId: req.userId,
-      status: 'connected',
-    });
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.filter(a => a.status === 'connected');
 
     if (accounts.length === 0) {
       res.json({ data: [], message: 'No connected accounts' });
@@ -376,10 +370,8 @@ router.get('/services/:serviceName/daily', async (req: AuthRequest, res: Respons
     const serviceName = decodeURIComponent(String(req.params.serviceName));
     const { startDate: queryStart, endDate: queryEnd } = req.query;
 
-    const accounts = await CloudAccount.find({
-      userId: req.userId,
-      status: 'connected',
-    });
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.filter(a => a.status === 'connected');
 
     if (accounts.length === 0) {
       res.json({ data: [], message: 'No connected accounts' });
@@ -566,10 +558,8 @@ router.get('/services/:serviceName/utilization', async (req: AuthRequest, res: R
  */
 router.get('/forecast', async (req: AuthRequest, res: Response) => {
   try {
-    const accounts = await CloudAccount.find({
-      userId: req.userId,
-      status: 'connected',
-    });
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.filter(a => a.status === 'connected');
 
     if (accounts.length === 0) {
       res.json({ forecast: [], message: 'No connected accounts' });

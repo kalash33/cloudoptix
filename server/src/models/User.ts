@@ -1,38 +1,43 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import * as dynamoose from 'dynamoose';
+import { Item } from 'dynamoose/dist/Item';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
-export interface IUser extends Document {
+export interface IUser extends Item {
+  id: string; // Auto-generated UUID
   email: string;
   password: string;
   name: string;
   company?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  comparePassword(candidatePassword: string): Promise<boolean>;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new dynamoose.Schema(
   {
+    id: {
+      type: String,
+      hashKey: true,
+      default: () => crypto.randomUUID(),
+    },
     email: {
       type: String,
       required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
+      index: {
+        name: 'emailIndex',
+        type: 'global',
+      },
     },
     password: {
       type: String,
       required: true,
-      minlength: 8,
     },
     name: {
       type: String,
       required: true,
-      trim: true,
     },
     company: {
       type: String,
-      trim: true,
     },
   },
   {
@@ -40,20 +45,20 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  
-  const salt = await bcrypt.genSalt(12);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+// We export the model instance
+export const UserModel = dynamoose.model<IUser>('User', userSchema);
+export default UserModel;
 
-// Compare password method
-userSchema.methods.comparePassword = async function (
-  candidatePassword: string
+// Utility functions extracted since Dynamoose doesn't support Schema method bindings the same way Mongoose does
+export const comparePassword = async function (
+  candidatePassword: string,
+  userPassword?: string
 ): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, this.password);
+  if (!userPassword) return false;
+  return bcrypt.compare(candidatePassword, userPassword);
 };
 
-export default mongoose.model<IUser>('User', userSchema);
+export const hashPassword = async function (password: string): Promise<string> {
+  const salt = await bcrypt.genSalt(12);
+  return bcrypt.hash(password, salt);
+};

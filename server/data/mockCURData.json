@@ -4,902 +4,6 @@
     "usageType": "BoxUsage:t3.medium",
     "cost": 17,
     "usageQuantity": 170,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 22,
-    "usageQuantity": 220,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 32,
-    "usageQuantity": 320,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 43,
-    "usageQuantity": 430,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 7,
-    "usageQuantity": 70,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 9,
-    "usageQuantity": 90,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 11,
-    "usageQuantity": 110,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-02",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 18,
-    "usageQuantity": 180,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 23,
-    "usageQuantity": 230,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 28,
-    "usageQuantity": 280,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 33,
-    "usageQuantity": 330,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 25,
-    "usageQuantity": 250,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 33,
-    "usageQuantity": 330,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 41,
-    "usageQuantity": 410,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 8,
-    "usageQuantity": 80,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 10,
-    "usageQuantity": 100,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 12,
-    "usageQuantity": 120,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 6,
-    "usageQuantity": 60,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 6,
-    "usageQuantity": 60,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 6,
-    "usageQuantity": 60,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 6,
-    "usageQuantity": 60,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 6,
-    "usageQuantity": 60,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 31,
-    "usageQuantity": 310,
-    "date": "2025-09-03",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 19,
-    "usageQuantity": 190,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 24,
-    "usageQuantity": 240,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 29,
-    "usageQuantity": 290,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 34,
-    "usageQuantity": 340,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 26,
-    "usageQuantity": 260,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 34,
-    "usageQuantity": 340,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 42,
-    "usageQuantity": 420,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 9,
-    "usageQuantity": 90,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 11,
-    "usageQuantity": 110,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 13,
-    "usageQuantity": 130,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-04",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 20,
-    "usageQuantity": 200,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 25,
-    "usageQuantity": 250,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 43,
-    "usageQuantity": 430,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 5,
-    "usageQuantity": 50,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 7,
-    "usageQuantity": 70,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 9,
-    "usageQuantity": 90,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 4,
-    "usageQuantity": 40,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 31,
-    "usageQuantity": 310,
-    "date": "2025-09-05",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 14.7,
-    "usageQuantity": 147,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 18.2,
-    "usageQuantity": 182,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 21.7,
-    "usageQuantity": 217,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 25.2,
-    "usageQuantity": 252,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 17.5,
-    "usageQuantity": 175,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 23.1,
-    "usageQuantity": 231,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 28.7,
-    "usageQuantity": 287,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 5.6,
-    "usageQuantity": 56,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 7,
-    "usageQuantity": 70,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 3.5,
-    "usageQuantity": 35,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 21,
-    "usageQuantity": 210,
-    "date": "2025-09-06",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 10.5,
-    "usageQuantity": 105,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 14,
-    "usageQuantity": 140,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 17.5,
-    "usageQuantity": 175,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 21,
-    "usageQuantity": 210,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 18.2,
-    "usageQuantity": 182,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 23.8,
-    "usageQuantity": 238,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 29.4,
-    "usageQuantity": 294,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 4.9,
-    "usageQuantity": 49,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 6.3,
-    "usageQuantity": 63,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 7.7,
-    "usageQuantity": 77,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 4.2,
-    "usageQuantity": 42,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 21.7,
-    "usageQuantity": 217,
-    "date": "2025-09-07",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 16,
-    "usageQuantity": 160,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:c5.large",
-    "cost": 21,
-    "usageQuantity": 210,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:m5.xlarge",
-    "cost": 26,
-    "usageQuantity": 260,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "EBS:VolumeUsage.gp3",
-    "cost": 31,
-    "usageQuantity": 310,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.r5.large",
-    "cost": 27,
-    "usageQuantity": 270,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "InstanceUsage:db.t3.medium",
-    "cost": 35,
-    "usageQuantity": 350,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Relational Database Service",
-    "usageType": "StorageUtility:Aurora",
-    "cost": 43,
-    "usageQuantity": 430,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "TimedStorage-ByteHrs",
-    "cost": 8,
-    "usageQuantity": 80,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "PutObject",
-    "cost": 10,
-    "usageQuantity": 100,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Simple Storage Service",
-    "usageType": "GetObject",
-    "cost": 12,
-    "usageQuantity": 120,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Request",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "AWS Lambda",
-    "usageType": "Compute-GB-s",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon CloudFront",
-    "usageType": "DataTransfer-Out-Bytes",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "ReadCapacityUnit-Hrs",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon DynamoDB",
-    "usageType": "WriteCapacityUnit-Hrs",
-    "cost": 3,
-    "usageQuantity": 30,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Kubernetes Service",
-    "usageType": "AmazonEKS-Hours",
-    "cost": 30,
-    "usageQuantity": 300,
-    "date": "2025-09-08",
-    "provider": "aws"
-  },
-  {
-    "service": "Amazon Elastic Compute Cloud",
-    "usageType": "BoxUsage:t3.medium",
-    "cost": 17,
-    "usageQuantity": 170,
     "date": "2025-09-09",
     "provider": "aws"
   },
@@ -23165,6 +22269,774 @@
     "cost": 28.21,
     "usageQuantity": 282,
     "date": "2026-03-01",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 22.1,
+    "usageQuantity": 221,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 28.6,
+    "usageQuantity": 286,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 35.1,
+    "usageQuantity": 351,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 41.6,
+    "usageQuantity": 416,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 35.1,
+    "usageQuantity": 351,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 45.5,
+    "usageQuantity": 455,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 55.9,
+    "usageQuantity": 559,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 9.1,
+    "usageQuantity": 91,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 11.7,
+    "usageQuantity": 117,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 14.3,
+    "usageQuantity": 143,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-02",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 23.4,
+    "usageQuantity": 234,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 29.9,
+    "usageQuantity": 299,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 36.4,
+    "usageQuantity": 364,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 42.9,
+    "usageQuantity": 429,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 42.9,
+    "usageQuantity": 429,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 53.3,
+    "usageQuantity": 533,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 10.4,
+    "usageQuantity": 104,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 13,
+    "usageQuantity": 130,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 15.6,
+    "usageQuantity": 156,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 40.3,
+    "usageQuantity": 403,
+    "date": "2026-03-03",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 24.7,
+    "usageQuantity": 247,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 31.2,
+    "usageQuantity": 312,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 37.7,
+    "usageQuantity": 377,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 44.2,
+    "usageQuantity": 442,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 33.8,
+    "usageQuantity": 338,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 44.2,
+    "usageQuantity": 442,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 54.6,
+    "usageQuantity": 546,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 11.7,
+    "usageQuantity": 117,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 14.3,
+    "usageQuantity": 143,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 16.9,
+    "usageQuantity": 169,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 3.9,
+    "usageQuantity": 39,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 3.9,
+    "usageQuantity": 39,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 3.9,
+    "usageQuantity": 39,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 3.9,
+    "usageQuantity": 39,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 3.9,
+    "usageQuantity": 39,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-04",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 26,
+    "usageQuantity": 260,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 45.5,
+    "usageQuantity": 455,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 35.1,
+    "usageQuantity": 351,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 45.5,
+    "usageQuantity": 455,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 55.9,
+    "usageQuantity": 559,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 9.1,
+    "usageQuantity": 91,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 11.7,
+    "usageQuantity": 117,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 5.2,
+    "usageQuantity": 52,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 40.3,
+    "usageQuantity": 403,
+    "date": "2026-03-05",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 27.3,
+    "usageQuantity": 273,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 33.8,
+    "usageQuantity": 338,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 40.3,
+    "usageQuantity": 403,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 46.8,
+    "usageQuantity": 468,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 32.5,
+    "usageQuantity": 325,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 42.9,
+    "usageQuantity": 429,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 53.3,
+    "usageQuantity": 533,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 7.8,
+    "usageQuantity": 78,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 10.4,
+    "usageQuantity": 104,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 13,
+    "usageQuantity": 130,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 6.5,
+    "usageQuantity": 65,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 39,
+    "usageQuantity": 390,
+    "date": "2026-03-06",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:t3.medium",
+    "cost": 13.65,
+    "usageQuantity": 137,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:c5.large",
+    "cost": 18.2,
+    "usageQuantity": 182,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "BoxUsage:m5.xlarge",
+    "cost": 22.75,
+    "usageQuantity": 228,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Compute Cloud",
+    "usageType": "EBS:VolumeUsage.gp3",
+    "cost": 27.3,
+    "usageQuantity": 273,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.r5.large",
+    "cost": 23.66,
+    "usageQuantity": 237,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "InstanceUsage:db.t3.medium",
+    "cost": 30.94,
+    "usageQuantity": 309,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Relational Database Service",
+    "usageType": "StorageUtility:Aurora",
+    "cost": 38.22,
+    "usageQuantity": 382,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "TimedStorage-ByteHrs",
+    "cost": 6.37,
+    "usageQuantity": 64,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "PutObject",
+    "cost": 8.19,
+    "usageQuantity": 82,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Simple Storage Service",
+    "usageType": "GetObject",
+    "cost": 10.01,
+    "usageQuantity": 100,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Request",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "AWS Lambda",
+    "usageType": "Compute-GB-s",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon CloudFront",
+    "usageType": "DataTransfer-Out-Bytes",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "ReadCapacityUnit-Hrs",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon DynamoDB",
+    "usageType": "WriteCapacityUnit-Hrs",
+    "cost": 5.46,
+    "usageQuantity": 55,
+    "date": "2026-03-07",
+    "provider": "aws"
+  },
+  {
+    "service": "Amazon Elastic Kubernetes Service",
+    "usageType": "AmazonEKS-Hours",
+    "cost": 28.21,
+    "usageQuantity": 282,
+    "date": "2026-03-07",
     "provider": "aws"
   }
 ]

@@ -24,7 +24,7 @@ export function createCostManagementClient(encryptedCredentials: string): {
   client: CostManagementClient;
   subscriptionId: string;
 } {
-  const credentials = decryptCredentials(encryptedCredentials) as AzureCredentials;
+  const credentials = decryptCredentials(encryptedCredentials) as unknown as AzureCredentials;
 
   const credential = new ClientSecretCredential(
     credentials.tenantId,

@@ -27,7 +27,7 @@ export function createEC2Client(
   encryptedCredentials: string,
   region?: string
 ): EC2Client {
-  const credentials = decryptCredentials(encryptedCredentials) as AWSCredentials;
+  const credentials = decryptCredentials(encryptedCredentials) as unknown as AWSCredentials;
 
   return new EC2Client({
     region: region || credentials.region || 'us-east-1',
@@ -76,9 +76,9 @@ export async function describeInstances(
                 tags,
                 cpuOptions: instance.CpuOptions
                   ? {
-                      coreCount: instance.CpuOptions.CoreCount,
-                      threadsPerCore: instance.CpuOptions.ThreadsPerCore,
-                    }
+                    coreCount: instance.CpuOptions.CoreCount,
+                    threadsPerCore: instance.CpuOptions.ThreadsPerCore,
+                  }
                   : undefined,
               });
             }

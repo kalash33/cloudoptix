@@ -19,9 +19,11 @@ router.use(auth);
  */
 router.get('/', async (req: AuthRequest, res: Response) => {
   try {
-    const accounts = await CloudAccount.find({ userId: req.userId }).select(
-      '-encryptedCredentials'
-    );
+    const accountsRaw = await CloudAccount.query('userId').eq(req.userId).exec();
+    const accounts = accountsRaw.map(a => {
+      const { encryptedCredentials, ...rest } = a;
+      return rest;
+    });
 
     res.json({ accounts });
   } catch (error) {
@@ -90,7 +92,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         ? 'Account connected successfully'
         : 'Account saved but connection failed',
       account: {
-        id: account._id,
+        id: account.id,
         provider: account.provider,
         name: account.name,
         accountId: account.accountId,
@@ -144,7 +146,7 @@ router.post('/mock', async (req: AuthRequest, res: Response) => {
     res.status(201).json({
       message: 'Mock account connected successfully',
       account: {
-        id: account._id,
+        id: account.id,
         provider: account.provider,
         name: account.name,
         accountId: account.accountId,
@@ -163,12 +165,9 @@ router.post('/mock', async (req: AuthRequest, res: Response) => {
  */
 router.post('/:id/test', async (req: AuthRequest, res: Response) => {
   try {
-    const account = await CloudAccount.findOne({
-      _id: req.params.id,
-      userId: req.userId,
-    });
+    const account = await CloudAccount.get(req.params.id as string);
 
-    if (!account) {
+    if (!account || !req.userId || account.userId !== req.userId) {
       res.status(404).json({ error: 'Account not found' });
       return;
     }
@@ -177,13 +176,13 @@ router.post('/:id/test', async (req: AuthRequest, res: Response) => {
 
     switch (account.provider) {
       case 'aws':
-        testResult = await awsCostExplorer.testConnection(account.encryptedCredentials);
+        testResult = await awsCostExplorer.testConnection(account.encryptedCredentials!);
         break;
       case 'gcp':
-        testResult = await gcpBigQuery.testConnection(account.encryptedCredentials);
+        testResult = await gcpBigQuery.testConnection(account.encryptedCredentials!);
         break;
       case 'azure':
-        testResult = await azureCostManagement.testConnection(account.encryptedCredentials);
+        testResult = await azureCostManagement.testConnection(account.encryptedCredentials!);
         break;
       default:
         testResult = { success: false, error: 'Invalid provider' };
@@ -210,15 +209,14 @@ router.post('/:id/test', async (req: AuthRequest, res: Response) => {
  */
 router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const result = await CloudAccount.deleteOne({
-      _id: req.params.id,
-      userId: req.userId,
-    });
+    const account = await CloudAccount.get(req.params.id as string);
 
-    if (result.deletedCount === 0) {
+    if (!account || !req.userId || account.userId !== req.userId) {
       res.status(404).json({ error: 'Account not found' });
       return;
     }
+
+    await account.delete();
 
     res.json({ message: 'Account deleted successfully' });
   } catch (error) {
@@ -233,12 +231,9 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
  */
 router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
   try {
-    const account = await CloudAccount.findOne({
-      _id: req.params.id,
-      userId: req.userId,
-    });
+    const account = await CloudAccount.get(req.params.id as string);
 
-    if (!account) {
+    if (!account || !req.userId || account.userId !== req.userId) {
       res.status(404).json({ error: 'Account not found' });
       return;
     }
@@ -255,7 +250,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
 
     switch (account.provider) {
       case 'aws': {
-        const client = awsCostExplorer.createCostExplorerClient(account.encryptedCredentials);
+        const client = await awsCostExplorer.createCostExplorerClient(account);
         const costData = await awsCostExplorer.getCostAndUsage(client, startDate, endDate, 'DAILY');
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
 
@@ -271,7 +266,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
         break;
       }
       case 'gcp': {
-        const costData = await gcpBigQuery.getDailyCosts(account.encryptedCredentials, startDate, endDate);
+        const costData = await gcpBigQuery.getDailyCosts(account.encryptedCredentials!, startDate, endDate);
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
 
         syncResult = {
@@ -286,7 +281,7 @@ router.post('/:id/sync', async (req: AuthRequest, res: Response) => {
         break;
       }
       case 'azure': {
-        const costData = await azureCostManagement.getDailyCosts(account.encryptedCredentials, startDate, endDate);
+        const costData = await azureCostManagement.getDailyCosts(account.encryptedCredentials!, startDate, endDate);
         const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
 
         syncResult = {

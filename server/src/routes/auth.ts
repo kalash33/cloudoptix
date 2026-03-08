@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User, { hashPassword, comparePassword } from '../models/User';
 import { generateToken } from '../middleware/auth';
 import dotenv from 'dotenv';
 
@@ -26,16 +26,17 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existingUsers = await User.query('email').eq(email).exec();
+    if (existingUsers.length > 0) {
       res.status(400).json({ error: 'Email already registered' });
       return;
     }
 
     // Create user
+    const hashedPassword = await hashPassword(password);
     const user = new User({
       email,
-      password,
+      password: hashedPassword,
       name,
       company,
     });
@@ -43,13 +44,13 @@ router.post('/register', async (req: Request, res: Response) => {
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken(user.id);
 
     res.status(201).json({
       message: 'User registered successfully',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email,
         name: user.name,
         company: user.company,
@@ -75,27 +76,28 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     // Find user
-    const user = await User.findOne({ email });
+    const users = await User.query('email').eq(email).exec();
+    const user = users[0];
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
     // Check password
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken(user.id);
 
     res.json({
       message: 'Login successful',
       token,
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email,
         name: user.name,
         company: user.company,
@@ -129,8 +131,8 @@ router.get('/me', async (req: Request, res: Response) => {
 
     const decoded = jwt.verify(token, jwtSecret) as { userId: string };
     console.log('/me: Token decoded successfully, userId:', decoded.userId);
-    
-    const user = await User.findById(decoded.userId).select('-password');
+
+    const user = await User.get(decoded.userId);
 
     if (!user) {
       console.error('/me: User not found for userId:', decoded.userId);
@@ -138,7 +140,9 @@ router.get('/me', async (req: Request, res: Response) => {
       return;
     }
 
-    res.json({ user });
+    const { password: _, ...userWithoutPassword } = user;
+
+    res.json({ user: userWithoutPassword });
   } catch (error: any) {
     console.error('/me: Token verification failed:', error.message);
     res.status(401).json({ error: 'Invalid token' });

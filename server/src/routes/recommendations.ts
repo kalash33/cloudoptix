@@ -4,15 +4,17 @@ import CloudAccount from '../models/CloudAccount';
 import { auth, AuthRequest } from '../middleware/auth';
 import * as awsEc2 from '../services/aws/ec2';
 import { getMockDataFromJSON } from '../utils/generateMockData';
+import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 
 const router = Router();
 
 // All routes require authentication
 router.use(auth);
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'openai/gpt-4o-mini';
+const bedrockClient = new BedrockRuntimeClient({
+  region: process.env.AWS_REGION || 'us-east-1',
+});
+const MODEL_ID = 'openai.gpt-oss-120b-1:0';
 
 // Simple in-memory cache (userId -> {data, timestamp})
 const recommendationCache: Record<string, { data: any; timestamp: number }> = {};
@@ -22,7 +24,8 @@ const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
  * Gather service cost data from all connected accounts
  */
 export async function gatherServiceCostData(userId: string) {
-  const accounts = await CloudAccount.find({ userId, status: 'connected' });
+  const accountsRaw = await CloudAccount.query('userId').eq(userId).exec();
+  const accounts = accountsRaw.filter(a => a.status === 'connected');
 
   const today = new Date();
 
@@ -50,7 +53,7 @@ export async function gatherServiceCostData(userId: string) {
             service: `${item.service}${item.usageType ? ' - ' + item.usageType : ''}`,
             provider: account.provider,
             cost: item.cost,
-            accountId: account._id.toString()
+            accountId: account.id
           });
         }
       }
@@ -127,14 +130,17 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     // Always calculate currentSpend for the frontend
     const costData = await gatherServiceCostData(req.userId!);
 
-    // Check for real recommendations in DB
-    const query: any = { userId: req.userId };
-    if (type) query.type = type;
-    if (status) { query.status = status; } else { query.status = { $ne: 'dismissed' }; }
+    const allRecs = await Recommendation.query('userId').eq(req.userId).exec();
 
-    let recommendations = await Recommendation.find(query)
-      .sort({ savings: -1 })
-      .limit(100);
+    let filtered = allRecs.filter(r => {
+      let match = true;
+      if (type) match = match && r.type === type;
+      if (status) match = match && r.status === status;
+      else match = match && r.status !== 'dismissed';
+      return match;
+    });
+
+    let recommendations = filtered.sort((a, b) => b.savings - a.savings).slice(0, 100);
 
     const totalSavings = recommendations.reduce((sum, r) => sum + r.savings, 0);
     const byType = recommendations.reduce(
@@ -173,10 +179,7 @@ router.get('/anomalies', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    if (!OPENROUTER_API_KEY) {
-      res.json({ anomalies: [] });
-      return;
-    }
+    // Removed API key check
 
     const costData = await gatherServiceCostData(userId);
     if (costData.services.length === 0) {
@@ -218,26 +221,22 @@ Respond ONLY with valid JSON (no markdown):
 }`;
 
       try {
-        const response = await fetch(OPENROUTER_URL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.5,
-          }),
+        const payload = {
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.5,
+        };
+
+        const command = new InvokeModelCommand({
+          modelId: MODEL_ID,
+          contentType: 'application/json',
+          accept: 'application/json',
+          body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-          console.error(`[AI Anomalies] API failed for service ${service.service}`);
-          continue;
-        }
-
-        const data = await response.json() as any;
-        const content = data.choices?.[0]?.message?.content || '{}';
+        const response = await bedrockClient.send(command);
+        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+        const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
         const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || [null, content];
         const parsed = JSON.parse(jsonMatch[1] || content);
 
@@ -280,10 +279,7 @@ router.get('/resources', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    if (!OPENROUTER_API_KEY) {
-      res.json({ resources: [] });
-      return;
-    }
+    // Removed API key check
 
     const costData = await gatherServiceCostData(userId);
     if (costData.services.length === 0) {
@@ -313,23 +309,22 @@ Respond ONLY with valid JSON(no markdown):
           ]
         } `;
 
-    const response = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY} `,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.6,
-      }),
+    const payload = {
+      max_tokens: 2048,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.6,
+    };
+
+    const command = new InvokeModelCommand({
+      modelId: MODEL_ID,
+      contentType: 'application/json',
+      accept: 'application/json',
+      body: JSON.stringify(payload),
     });
 
-    if (!response.ok) throw new Error('AI API failed');
-
-    const data = await response.json() as any;
-    const content = data.choices?.[0]?.message?.content || '{}';
+    const response = await bedrockClient.send(command);
+    const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+    const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
     const jsonMatch = content.match(/```(?: json) ?\s * ([\s\S] *?) \s * ```/) || [null, content];
     const parsed = JSON.parse(jsonMatch[1] || content);
     const resources = parsed.resources || [];
@@ -350,12 +345,11 @@ router.post('/generate', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.userId!;
 
-    if (!OPENROUTER_API_KEY) {
-      return res.status(500).json({ error: 'OpenRouter API key not configured' });
-    }
+    // Removed API key check
 
     // Clear existing DB recommendations to force AI regeneration
-    await Recommendation.deleteMany({ userId });
+    const existingRecs = await Recommendation.query('userId').eq(userId).exec();
+    await Promise.all(existingRecs.map(rec => rec.delete()));
 
     // Clear in-memory caches and insights
     delete recommendationCache[userId];
@@ -382,10 +376,10 @@ Service to analyze:
         - CPU Utilization: ${service.cpuAvg}% avg over 30 days
           - Memory Utilization: ${service.memAvg}% avg over 30 days
 
-Generate 1 specific, actionable cost optimization recommendation for this specific resource based on the utilization metrics.
-If the resource is decently utilized(e.g., CPU > 35 % and Memory > 35 %), return an empty array for recommendations[].
+Generate 1 specific, actionable cost optimization recommendation for this specific resource based on its utilization metrics and high monthly cost.
+Even if the resource is somewhat utilized, find a creative way to optimize it (e.g., Rightsizing, Reserved Instances, Archival). Only return an empty array for recommendations[] if utilizing is remarkably perfect (CPU > 85% and Memory > 85%).
 
-Respond ONLY with valid JSON(no markdown):
+Respond ONLY with valid JSON (no markdown):
         {
           "recommendations": [
             {
@@ -407,29 +401,24 @@ Respond ONLY with valid JSON(no markdown):
         console.log(`[OpenRouter API] Sending request for ${service.service}...`);
         console.log(`[OpenRouter API]Prompt: `, prompt);
 
-        const response = await fetch(OPENROUTER_URL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.6,
-          }),
+        const payload = {
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.6,
+        };
+
+        const command = new InvokeModelCommand({
+          modelId: MODEL_ID,
+          contentType: 'application/json',
+          accept: 'application/json',
+          body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(`[OpenRouter API]Error for service ${service.service}: `, response.status, response.statusText, errorText);
-          continue;
-        }
+        const response = await bedrockClient.send(command);
+        const responseBody = JSON.parse(new TextDecoder().decode(response.body));
+        console.log(`[Bedrock API] Received response for ${service.service}: `, JSON.stringify(responseBody, null, 2));
 
-        const data = await response.json() as any;
-        console.log(`[OpenRouter API] Received response for ${service.service}: `, JSON.stringify(data, null, 2));
-
-        const content = data.choices?.[0]?.message?.content || '{}';
+        const content = responseBody.choices?.[0]?.message?.content || responseBody.content?.[0]?.text || '{}';
         const jsonMatch = content.match(/```(?: json) ?\s * ([\s\S] *?) \s * ```/) || [null, content];
         const parsed = JSON.parse(jsonMatch[1] || content);
 
@@ -489,31 +478,29 @@ router.patch('/:id/status', async (req: AuthRequest, res: Response) => {
     }
 
     if (status === 'dismissed') {
-      const recommendation = await Recommendation.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+      const recommendation = await Recommendation.get(req.params.id as string);
 
-      if (!recommendation) {
+      if (!recommendation || recommendation.userId !== req.userId) {
         res.status(404).json({ error: 'Recommendation not found' });
         return;
       }
 
+      await recommendation.delete();
+
       // Return the deleted record but with 'dismissed' status to satisfy frontend
-      res.json({ recommendation: { ...recommendation.toJSON(), status: 'dismissed' } });
+      res.json({ recommendation: { ...(recommendation as any), status: 'dismissed' } });
       return;
     }
 
-    const recommendation = await Recommendation.findOneAndUpdate(
-      { _id: req.params.id, userId: req.userId },
-      {
-        status,
-        ...(status === 'applied' ? { appliedAt: new Date() } : {}),
-      },
-      { new: true }
-    );
-
-    if (!recommendation) {
+    const recommendation = await Recommendation.get(req.params.id as string);
+    if (!recommendation || recommendation.userId !== req.userId) {
       res.status(404).json({ error: 'Recommendation not found' });
       return;
     }
+
+    recommendation.status = status as any;
+    if (status === 'applied') recommendation.appliedAt = new Date();
+    await recommendation.save();
 
     res.json({ recommendation });
   } catch (error) {

@@ -1,13 +1,16 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import * as dynamoose from 'dynamoose';
+import { Item } from 'dynamoose/dist/Item';
+import crypto from 'crypto';
 
 export type RecommendationType = 'rightsizing' | 'unused' | 'commitment' | 'service-switch' | 'migration';
 export type EffortLevel = 'low' | 'medium' | 'high';
 export type RiskLevel = 'low' | 'medium' | 'high';
 export type RecommendationStatus = 'active' | 'dismissed' | 'applied';
 
-export interface IRecommendation extends Document {
-  accountId: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
+export interface IRecommendation extends Item {
+  id: string;
+  accountId: string;
+  userId: string;
   type: RecommendationType;
   title: string;
   description: string;
@@ -23,25 +26,38 @@ export interface IRecommendation extends Document {
   risk: RiskLevel;
   status: RecommendationStatus;
   implementationSteps?: string[];
-  detectedAt: Date;
+  detectedAt?: Date;
   appliedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const recommendationSchema = new Schema<IRecommendation>(
+const recommendationSchema = new dynamoose.Schema(
   {
+    id: {
+      type: String,
+      hashKey: true,
+      default: () => crypto.randomUUID(),
+    },
     accountId: {
-      type: Schema.Types.ObjectId,
-      ref: 'CloudAccount',
+      type: String,
       required: true,
-      index: true,
     },
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: true,
-      index: true,
+      index: [
+        {
+          name: 'userId-status-index',
+          type: 'global',
+          rangeKey: 'status',
+        },
+        {
+          name: 'userId-type-index',
+          type: 'global',
+          rangeKey: 'type',
+        }
+      ]
     },
     type: {
       type: String,
@@ -104,10 +120,13 @@ const recommendationSchema = new Schema<IRecommendation>(
       enum: ['active', 'dismissed', 'applied'],
       default: 'active',
     },
-    implementationSteps: [String],
+    implementationSteps: {
+      type: Array,
+      schema: [String],
+    },
     detectedAt: {
       type: Date,
-      default: Date.now,
+      default: () => new Date(),
     },
     appliedAt: Date,
   },
@@ -116,8 +135,5 @@ const recommendationSchema = new Schema<IRecommendation>(
   }
 );
 
-// Indexes for efficient queries
-recommendationSchema.index({ userId: 1, status: 1 });
-recommendationSchema.index({ userId: 1, type: 1 });
-
-export default mongoose.model<IRecommendation>('Recommendation', recommendationSchema);
+export const RecommendationModel = dynamoose.model<IRecommendation>('Recommendation', recommendationSchema);
+export default RecommendationModel;
