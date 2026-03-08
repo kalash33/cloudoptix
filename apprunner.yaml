@@ -5,11 +5,17 @@ build:
     build:
       - cd server && npm install && npm run build
 run:
-  command: cd server && npm start
+  command: cd server && node dist/index.js
   network:
     port: 8080
   env:
     - name: NODE_ENV
       value: production
+    - name: PORT
+      value: "8080"
     - name: AWS_REGION
       value: us-east-1
+    - name: JWT_SECRET
+      value: "878aa0c116799488aad5d9d59eec9537504a46d308a9432328b74e0b8ba120d8"
+    - name: ENCRYPTION_KEY
+      value: "0c5e09cc8cde5348e72077b77f875808822869c171eb1508ae633b91569cf065"
