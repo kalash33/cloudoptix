@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'FinOpsSpendy - Backend App Runner Service'
+
+Parameters:
+  GitHubConnectionArn:
+    Type: String
+    Description: 'The ARN of your AWS App Runner GitHub Connection. Go to AWS Console -> App Runner -> Connections to create one and paste the ARN here.'
+  
+  GitHubRepoUrl:
+    Type: String
+    Description: 'Your GitHub Repository URL (e.g., https://github.com/yourusername/finopsspendy)'
+  
+  GitHubBranch:
+    Type: String
+    Default: 'main'
+    Description: 'The branch to deploy'
+
+  MongodbUri:
+    Type: String
+    NoEcho: true
+    Description: 'MongoDB Connection String (from Atlas)'
+
+  JwtSecret:
+    Type: String
+    NoEcho: true
+    Description: 'JWT Secret for authentication'
+
+  EncryptionKey:
+    Type: String
+    NoEcho: true
+    Description: '32-byte hex encryption key for cloud credentials'
+
+  OpenRouterApiKey:
+    Type: String
+    NoEcho: true
+    Description: 'OpenRouter API Key'
+
+Resources:
+  # IAM Role for App Runner Instance
+  AppRunnerInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: tasks.apprunner.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess # For reading CUR if needed
+
+  # App Runner Service
+  BackendService:
+    Type: AWS::AppRunner::Service
+    Properties:
+      ServiceName: finopsspendy-api
+      InstanceConfiguration:
+        InstanceRoleArn: !GetAtt AppRunnerInstanceRole.Arn
+      SourceConfiguration:
+        AuthenticationConfiguration:
+          ConnectionArn: !Ref GitHubConnectionArn
+        AutoDeploymentsEnabled: true
+        CodeRepository:
+          RepositoryUrl: !Ref GitHubRepoUrl
+          SourceCodeVersion:
+            Type: BRANCH
+            Value: !Ref GitHubBranch
+          CodeConfiguration:
+            ConfigurationSource: API
+            CodeConfigurationValues:
+              Runtime: NODEJS_18
+              BuildCommand: 'cd server && npm install && npm run build'
+              StartCommand: 'cd server && npm start'
+              Port: '5001'
+              RuntimeEnvironmentVariables:
+                - Name: NODE_ENV
+                  Value: 'production'
+                - Name: MONGODB_URI
+                  Value: !Ref MongodbUri
+                - Name: JWT_SECRET
+                  Value: !Ref JwtSecret
+                - Name: ENCRYPTION_KEY
+                  Value: !Ref EncryptionKey
+                - Name: OPENROUTER_API_KEY
+                  Value: !Ref OpenRouterApiKey
+
+Outputs:
+  AppRunnerServiceUrl:
+    Description: 'The URL of the deployed FinOpsSpendy Backend API. Paste this into your Frontend NEXT_PUBLIC_API_URL.'
+    Value: !GetAtt BackendService.ServiceUrl
